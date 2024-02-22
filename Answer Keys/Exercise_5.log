@@ -1,0 +1,635 @@
+------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Do/
+> Exercise_5.log
+  log type:  text
+ opened on:  25 Feb 2021, 08:43:40
+
+. 
+. *FILE:    Exercise_5.do
+. *PURPOSE: Answer key to Exercise 5
+. 
+. 
+. *This should be the path to your Original data folder, where you have saved the raw data file you just cre
+> ated.
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original d
+> ata"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data
+
+. 
+. **************
+. * QUESTION 2 *
+. **************
+. 
+. *These are the data
+. use nhanes.dta
+(National Health and Nutrition Examination Survey (NHANES), 2005-2006, Questionna)
+
+. describe
+
+Contains data from nhanes.dta
+  obs:         9,424                          National Health and Nutrition Examination Survey (NHANES),
+                                                2005-2006, Questionna
+ vars:            62                          22 Aug 2011 15:01
+------------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+------------------------------------------------------------------------------------------------------------
+SEQN            long    %12.0g                Respondent sequence number
+PAD020          int     %21.0g     PAD020     Walked or bicycled over past 30 days
+PAQ050Q         int     %10.0g     PAQ050Q    # times walked or bicycled
+PAQ050U         int     %10.0g     PAQ050U    Unit of measure (day/week/month)
+PAD080          int     %10.0g     PAD080     How long per day (minutes)
+PAQ100          int     %21.0g     PAQ100     Tasks around home/yard past 30 days
+PAD120          long    %12.0g     PAD120     # of times past 30 days
+PAD160          int     %10.0g     PAD160     How long each time (minutes)
+PAQ180          int     %59.0g     PAQ180     Avg level of physical activity each day
+PAD200          int     %21.0g     PAD200     Vigorous activity over past 30 days
+PAD320          int     %21.0g     PAD320     Moderate activity over past 30 days
+PAD440          int     %21.0g     PAD440     Muscle strengthening activities
+PAD460          int     %10.0g     PAD460     Number of times past 30 days
+PAQ500          int     %15.0g     PAQ500     Activity comparison last mo - last yr
+PAQ520          int     %15.0g     PAQ520     Compare activity w/others same age
+PAQ540          int     %19.0g     PAQ540     Compare activity with 10 years ago
+PAQ560          long    %12.0g     PAQ560     # time/week you play or exercise hard
+PAD590          int     %17.0g     PAD590     # hours watch TV or videos past 30 days
+PAD600          int     %16.0g     PAD600     # of hours use computer past 30 days
+PAAQUEX         int     %23.0g     PAAQUEX    Questionnaire source flag for weighting
+SDDSRVYR        int     %31.0g     SDDSRVYR   Data Release Number
+RIDSTATR        int     %33.0g     RIDSTATR   Interview/Examination Status
+RIDEXMON        int     %27.0g     RIDEXMON   Six month time period
+RIAGENDR        int     %8.0g      RIAGENDR   Gender
+RIDAGEYR        int     %18.0g     RIDAGEYR   Age at Screening Adjudicated - Recode
+RIDAGEMN        int     %8.0g                 Age in Months - Recode
+RIDAGEEX        int     %8.0g                 Exam Age in Months - Recode
+RIDRETH1        int     %35.0g     RIDRETH1   Race/Ethnicity - Recode
+DMQMILIT        int     %10.0g     DMQMILIT   Veteran/Military Status
+DMDBORN         int     %38.0g     DMDBORN    Country of Birth - Recode
+DMDCITZN        int     %34.0g     DMDCITZN   Citizenship Status
+DMDYRSUS        int     %26.0g     DMDYRSUS   Length of time in US
+DMDEDUC3        int     %34.0g     DMDEDUC3   Education Level - Children/Youth 6-19
+DMDEDUC2        int     %50.0g     DMDEDUC2   Education Level - Adults 20+
+DMDSCHOL        int     %58.0g     DMDSCHOL   Now attending school?
+DMDMARTL        int     %19.0g     DMDMARTL   Marital Status
+DMDHHSIZ        int     %33.0g     DMDHHSIZ   Total number of people in the Household
+DMDFMSIZ        int     %30.0g     DMDFMSIZ   Total number of people in the Family
+INDHHINC        int     %18.0g     INDHHINC   Annual Household Income
+INDFMINC        int     %18.0g     INDFMINC   Annual Family Income
+INDFMPIR        float   %39.0g     INDFMPIR   Family PIR
+RIDEXPRG        int     %58.0g     RIDEXPRG   Pregnancy Status at Exam - Recode
+DMDHRGND        int     %8.0g      DMDHRGND   HH Ref Person Gender
+DMDHRAGE        int     %18.0g     DMDHRAGE   HH Ref Person Age
+DMDHRBRN        int     %38.0g     DMDHRBRN   HH Ref Person Country of Birth
+DMDHREDU        int     %50.0g     DMDHREDU   HH Ref Person Education Level
+DMDHRMAR        int     %19.0g     DMDHRMAR   HH Ref Person Marital Status
+DMDHSEDU        int     %50.0g     DMDHSEDU   HH Ref Person's Spouse Education Level
+SIALANG         int     %8.0g      SIALANG    Language of SP Interview
+SIAPROXY        int     %8.0g      SIAPROXY   Proxy used in SP Interview?
+SIAINTRP        int     %8.0g      SIAINTRP   Interpreter used in SP Interview?
+FIALANG         int     %8.0g      FIALANG    Language of Family Interview
+FIAPROXY        int     %8.0g      FIAPROXY   Proxy used in Family Interview?
+FIAINTRP        int     %8.0g      FIAINTRP   Interpreter used in Family Interview?
+MIALANG         int     %8.0g      MIALANG    Language of MEC Interview
+MIAPROXY        int     %8.0g      MIAPROXY   Proxy used in MEC Interview?
+MIAINTRP        int     %8.0g      MIAINTRP   Interpreter used in MEC Interview?
+AIALANG         int     %8.0g      AIALANG    Language of ACASI Interview
+WTINT2YR        double  %10.0g                Full Sample 2 Year Interview Weight
+WTMEC2YR        double  %10.0g                Full Sample 2 Year MEC Exam Weight
+SDMVPSU         int     %8.0g                 Masked Variance Pseudo-PSU
+SDMVSTRA        int     %8.0g                 Masked Variance Pseudo-Stratum
+------------------------------------------------------------------------------------------------------------
+Sorted by: 
+
+. 
+. *Rename all variables to lower case
+. rename *, lower
+
+. 
+. *describe data
+. describe
+
+Contains data from nhanes.dta
+  obs:         9,424                          National Health and Nutrition Examination Survey (NHANES),
+                                                2005-2006, Questionna
+ vars:            62                          22 Aug 2011 15:01
+------------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+------------------------------------------------------------------------------------------------------------
+seqn            long    %12.0g                Respondent sequence number
+pad020          int     %21.0g     PAD020     Walked or bicycled over past 30 days
+paq050q         int     %10.0g     PAQ050Q    # times walked or bicycled
+paq050u         int     %10.0g     PAQ050U    Unit of measure (day/week/month)
+pad080          int     %10.0g     PAD080     How long per day (minutes)
+paq100          int     %21.0g     PAQ100     Tasks around home/yard past 30 days
+pad120          long    %12.0g     PAD120     # of times past 30 days
+pad160          int     %10.0g     PAD160     How long each time (minutes)
+paq180          int     %59.0g     PAQ180     Avg level of physical activity each day
+pad200          int     %21.0g     PAD200     Vigorous activity over past 30 days
+pad320          int     %21.0g     PAD320     Moderate activity over past 30 days
+pad440          int     %21.0g     PAD440     Muscle strengthening activities
+pad460          int     %10.0g     PAD460     Number of times past 30 days
+paq500          int     %15.0g     PAQ500     Activity comparison last mo - last yr
+paq520          int     %15.0g     PAQ520     Compare activity w/others same age
+paq540          int     %19.0g     PAQ540     Compare activity with 10 years ago
+paq560          long    %12.0g     PAQ560     # time/week you play or exercise hard
+pad590          int     %17.0g     PAD590     # hours watch TV or videos past 30 days
+pad600          int     %16.0g     PAD600     # of hours use computer past 30 days
+paaquex         int     %23.0g     PAAQUEX    Questionnaire source flag for weighting
+sddsrvyr        int     %31.0g     SDDSRVYR   Data Release Number
+ridstatr        int     %33.0g     RIDSTATR   Interview/Examination Status
+ridexmon        int     %27.0g     RIDEXMON   Six month time period
+riagendr        int     %8.0g      RIAGENDR   Gender
+ridageyr        int     %18.0g     RIDAGEYR   Age at Screening Adjudicated - Recode
+ridagemn        int     %8.0g                 Age in Months - Recode
+ridageex        int     %8.0g                 Exam Age in Months - Recode
+ridreth1        int     %35.0g     RIDRETH1   Race/Ethnicity - Recode
+dmqmilit        int     %10.0g     DMQMILIT   Veteran/Military Status
+dmdborn         int     %38.0g     DMDBORN    Country of Birth - Recode
+dmdcitzn        int     %34.0g     DMDCITZN   Citizenship Status
+dmdyrsus        int     %26.0g     DMDYRSUS   Length of time in US
+dmdeduc3        int     %34.0g     DMDEDUC3   Education Level - Children/Youth 6-19
+dmdeduc2        int     %50.0g     DMDEDUC2   Education Level - Adults 20+
+dmdschol        int     %58.0g     DMDSCHOL   Now attending school?
+dmdmartl        int     %19.0g     DMDMARTL   Marital Status
+dmdhhsiz        int     %33.0g     DMDHHSIZ   Total number of people in the Household
+dmdfmsiz        int     %30.0g     DMDFMSIZ   Total number of people in the Family
+indhhinc        int     %18.0g     INDHHINC   Annual Household Income
+indfminc        int     %18.0g     INDFMINC   Annual Family Income
+indfmpir        float   %39.0g     INDFMPIR   Family PIR
+ridexprg        int     %58.0g     RIDEXPRG   Pregnancy Status at Exam - Recode
+dmdhrgnd        int     %8.0g      DMDHRGND   HH Ref Person Gender
+dmdhrage        int     %18.0g     DMDHRAGE   HH Ref Person Age
+dmdhrbrn        int     %38.0g     DMDHRBRN   HH Ref Person Country of Birth
+dmdhredu        int     %50.0g     DMDHREDU   HH Ref Person Education Level
+dmdhrmar        int     %19.0g     DMDHRMAR   HH Ref Person Marital Status
+dmdhsedu        int     %50.0g     DMDHSEDU   HH Ref Person's Spouse Education Level
+sialang         int     %8.0g      SIALANG    Language of SP Interview
+siaproxy        int     %8.0g      SIAPROXY   Proxy used in SP Interview?
+siaintrp        int     %8.0g      SIAINTRP   Interpreter used in SP Interview?
+fialang         int     %8.0g      FIALANG    Language of Family Interview
+fiaproxy        int     %8.0g      FIAPROXY   Proxy used in Family Interview?
+fiaintrp        int     %8.0g      FIAINTRP   Interpreter used in Family Interview?
+mialang         int     %8.0g      MIALANG    Language of MEC Interview
+miaproxy        int     %8.0g      MIAPROXY   Proxy used in MEC Interview?
+miaintrp        int     %8.0g      MIAINTRP   Interpreter used in MEC Interview?
+aialang         int     %8.0g      AIALANG    Language of ACASI Interview
+wtint2yr        double  %10.0g                Full Sample 2 Year Interview Weight
+wtmec2yr        double  %10.0g                Full Sample 2 Year MEC Exam Weight
+sdmvpsu         int     %8.0g                 Masked Variance Pseudo-PSU
+sdmvstra        int     %8.0g                 Masked Variance Pseudo-Stratum
+------------------------------------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. 
+. 
+. **************
+. * QUESTION 3 *
+. **************
+. 
+. *First tabulate the measure of vigorous physical activity
+. tab pad200, miss
+
+    Vigorous activity |
+    over past 30 days |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+                  Yes |      3,092       32.81       32.81
+                   No |      3,816       40.49       73.30
+Unable to do activity |        241        2.56       75.86
+              Refused |          1        0.01       75.87
+           Don't know |          1        0.01       75.88
+                    . |      2,273       24.12      100.00
+----------------------+-----------------------------------
+                Total |      9,424      100.00
+
+. 
+. 
+. 
+. //// 3A ////
+> *In terms of recoding, it probably makes sense to recode 
+. *"unable to do activity" as "no" and to recode the refused 
+. *and don't know responses as missing
+. 
+. *need to look at codebook or retabulate to view category values
+. *let's use the numlabel command
+. numlabel, add // this adds number category prefixes to all value labels in the dataset
+
+. tab pad200, miss
+
+  Vigorous activity over |
+            past 30 days |      Freq.     Percent        Cum.
+-------------------------+-----------------------------------
+                  1. Yes |      3,092       32.81       32.81
+                   2. No |      3,816       40.49       73.30
+3. Unable to do activity |        241        2.56       75.86
+              7. Refused |          1        0.01       75.87
+           9. Don't know |          1        0.01       75.88
+                       . |      2,273       24.12      100.00
+-------------------------+-----------------------------------
+                   Total |      9,424      100.00
+
+. 
+. *generate a new variable before recoding
+. gen exercise=pad200
+(2,273 missing values generated)
+
+. recode exercise 3=2 7/9=.
+(exercise: 243 changes made)
+
+. 
+. *tabulate new and original variables to make sure that you have done 
+. *the recoding as you intended
+. tab pad200 exercise, miss
+
+    Vigorous activity |             exercise
+    over past 30 days |         1          2          . |     Total
+----------------------+---------------------------------+----------
+               1. Yes |     3,092          0          0 |     3,092 
+                2. No |         0      3,816          0 |     3,816 
+3. Unable to do activ |         0        241          0 |       241 
+           7. Refused |         0          0          1 |         1 
+        9. Don't know |         0          0          1 |         1 
+                    . |         0          0      2,273 |     2,273 
+----------------------+---------------------------------+----------
+                Total |     3,092      4,057      2,275 |     9,424 
+
+. 
+. 
+. 
+. 
+. //// 3B ////
+> *Missing data - there are 2,273 missing on the original 
+. *variable (.) and additional two missing on the newly constructed variable
+. *given that I've recoded the DKs and Refused to .s 
+. 
+. 
+. 
+. 
+. //// 3C ////
+> *Reason for missing values - based on careful examination of the 
+. *codebook, it seems likely that the 2,273 missing values are for cases 
+. *where the SP - sample person - is outside the age range of 12-150 yrs.
+. 
+. *Note the codebook description for pad2000 says "Target: B(12 Yrs. to 150 Yrs.)"
+. 
+. 
+. 
+. //// 3D ////
+> *check this by tabulating age when pad2000 is missing
+. tab ridageyr if pad200==., miss
+
+      Age at Screening |
+  Adjudicated - Recode |      Freq.     Percent        Cum.
+-----------------------+-----------------------------------
+                     2 |        353       15.53       15.53
+                     3 |        219        9.63       25.16
+                     4 |        249       10.95       36.12
+                     5 |        230       10.12       46.24
+                     6 |        211        9.28       55.52
+                     7 |        173        7.61       63.13
+                     8 |        187        8.23       71.36
+                     9 |        193        8.49       79.85
+                    10 |        205        9.02       88.87
+                    11 |        176        7.74       96.61
+                    12 |         23        1.01       97.62
+                    13 |         13        0.57       98.20
+                    14 |         11        0.48       98.68
+                    15 |         30        1.32      100.00
+-----------------------+-----------------------------------
+                 Total |      2,273      100.00
+
+. 
+. *Most but not all of the missing cases are under age 12
+. *A smaller number of missing cases are 12-15 
+. 
+. 
+. **************
+. * QUESTION 4 *
+. **************
+. 
+. *Look at hours of TV watched
+. tab pad590, miss
+
+ # hours watch TV or |
+ videos past 30 days |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+0. Less than 1 hour, |      1,252       13.29       13.29
+          1. 1 hour, |      1,747       18.54       31.82
+         2. 2 hours, |      2,556       27.12       58.95
+         3. 3 hours, |      1,541       16.35       75.30
+      4. 4 hours, or |        902        9.57       84.87
+ 5. 5 hours or more? |      1,197       12.70       97.57
+             6. None |        145        1.54       99.11
+         77. Refused |          1        0.01       99.12
+      99. Don't know |          6        0.06       99.18
+                   . |         77        0.82      100.00
+---------------------+-----------------------------------
+               Total |      9,424      100.00
+
+. 
+. *begin by generating a new variable prior to recoding
+. gen tv=pad590
+(77 missing values generated)
+
+. 
+. *recode appropriately - "none" coded as 0 hours, less than 1 hour coded 
+. *as 0.5 hours, 5 or more arbitrarily coded as 7 hours, and missing codes 
+. *are assigned missing value
+. *note that these recodes reflect assumptions about values for range 
+. *categories (less than 1 and 5 or more)
+. recode tv 0=.5 6=0 5=7 77=. 99=.
+(tv: 2601 changes made)
+
+. 
+. *Check the variable recode
+. tab pad590 tv, miss
+
+ # hours watch TV or |                                tv
+ videos past 30 days |         0         .5          1          2          3          4 |     Total
+---------------------+------------------------------------------------------------------+----------
+0. Less than 1 hour, |         0      1,252          0          0          0          0 |     1,252 
+          1. 1 hour, |         0          0      1,747          0          0          0 |     1,747 
+         2. 2 hours, |         0          0          0      2,556          0          0 |     2,556 
+         3. 3 hours, |         0          0          0          0      1,541          0 |     1,541 
+      4. 4 hours, or |         0          0          0          0          0        902 |       902 
+ 5. 5 hours or more? |         0          0          0          0          0          0 |     1,197 
+             6. None |       145          0          0          0          0          0 |       145 
+         77. Refused |         0          0          0          0          0          0 |         1 
+      99. Don't know |         0          0          0          0          0          0 |         6 
+                   . |         0          0          0          0          0          0 |        77 
+---------------------+------------------------------------------------------------------+----------
+               Total |       145      1,252      1,747      2,556      1,541        902 |     9,424 
+
+
+ # hours watch TV or |          tv
+ videos past 30 days |         7          . |     Total
+---------------------+----------------------+----------
+0. Less than 1 hour, |         0          0 |     1,252 
+          1. 1 hour, |         0          0 |     1,747 
+         2. 2 hours, |         0          0 |     2,556 
+         3. 3 hours, |         0          0 |     1,541 
+      4. 4 hours, or |         0          0 |       902 
+ 5. 5 hours or more? |     1,197          0 |     1,197 
+             6. None |         0          0 |       145 
+         77. Refused |         0          1 |         1 
+      99. Don't know |         0          6 |         6 
+                   . |         0         77 |        77 
+---------------------+----------------------+----------
+               Total |     1,197         84 |     9,424 
+
+. 
+. *This gives a mean hours of TV watching measure for the entire sample
+. *About 2.6 hours per day.
+. sum tv
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          tv |      9,340    2.579764     1.99256          0          7
+
+. 
+. 
+. **************
+. * QUESTION 5 *
+. ************** 
+. 
+. *Distribution of respondent's age.
+. summarize ridageyr, detail
+
+            Age at Screening Adjudicated - Recode
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            2              2
+ 5%            3              2
+10%            5              2       Obs               9,424
+25%           12              2       Sum of Wgt.       9,424
+
+50%           22                      Mean           30.64686
+                        Largest       Std. Dev.      23.60933
+75%           48             85
+90%           69             85       Variance       557.4005
+95%           78             85       Skewness       .7446437
+99%           85             85       Kurtosis       2.378461
+
+. count if ridageyr==. // this allows me to see how many instances of . there are for ridageyr
+  0
+
+.                                          // there are no missings
+. 
+. *The youngest person in the sample is 2 and the oldest is 85 years or older
+. *(85 is an open ended age category). The mean age is 30.6
+. 
+. *Recode respondent's age into a categorical variable
+. *I will use categories that correspond to children, teenagers, 
+. *young adults, middle age, older
+. 
+. gen agec=ridageyr
+
+. recode agec 0/12=1 13/19=2 20/35=3 36/64=4 65/85=5
+(agec: 9424 changes made)
+
+. 
+. *Check the creation of this variable 
+. tab ridageyr agec, miss //this output is a tad long, but in this case it is acceptable
+
+     Age at Screening |                          agec
+ Adjudicated - Recode |         1          2          3          4          5 |     Total
+----------------------+-------------------------------------------------------+----------
+                    2 |       353          0          0          0          0 |       353 
+                    3 |       219          0          0          0          0 |       219 
+                    4 |       249          0          0          0          0 |       249 
+                    5 |       230          0          0          0          0 |       230 
+                    6 |       211          0          0          0          0 |       211 
+                    7 |       173          0          0          0          0 |       173 
+                    8 |       187          0          0          0          0 |       187 
+                    9 |       193          0          0          0          0 |       193 
+                   10 |       205          0          0          0          0 |       205 
+                   11 |       176          0          0          0          0 |       176 
+                   12 |       282          0          0          0          0 |       282 
+                   13 |         0        267          0          0          0 |       267 
+                   14 |         0        251          0          0          0 |       251 
+                   15 |         0        289          0          0          0 |       289 
+                   16 |         0        299          0          0          0 |       299 
+                   17 |         0        277          0          0          0 |       277 
+                   18 |         0        316          0          0          0 |       316 
+                   19 |         0        268          0          0          0 |       268 
+                   20 |         0          0        102          0          0 |       102 
+                   21 |         0          0        102          0          0 |       102 
+                   22 |         0          0        110          0          0 |       110 
+                   23 |         0          0        114          0          0 |       114 
+                   24 |         0          0        108          0          0 |       108 
+                   25 |         0          0        116          0          0 |       116 
+                   26 |         0          0        109          0          0 |       109 
+                   27 |         0          0         89          0          0 |        89 
+                   28 |         0          0         99          0          0 |        99 
+                   29 |         0          0        118          0          0 |       118 
+                   30 |         0          0         96          0          0 |        96 
+                   31 |         0          0         90          0          0 |        90 
+                   32 |         0          0         81          0          0 |        81 
+                   33 |         0          0         83          0          0 |        83 
+                   34 |         0          0         96          0          0 |        96 
+                   35 |         0          0         93          0          0 |        93 
+                   36 |         0          0          0         90          0 |        90 
+                   37 |         0          0          0         72          0 |        72 
+                   38 |         0          0          0         84          0 |        84 
+                   39 |         0          0          0         71          0 |        71 
+                   40 |         0          0          0        107          0 |       107 
+                   41 |         0          0          0         90          0 |        90 
+                   42 |         0          0          0         79          0 |        79 
+                   43 |         0          0          0         75          0 |        75 
+                   44 |         0          0          0         85          0 |        85 
+                   45 |         0          0          0         93          0 |        93 
+                   46 |         0          0          0         92          0 |        92 
+                   47 |         0          0          0         74          0 |        74 
+                   48 |         0          0          0         74          0 |        74 
+                   49 |         0          0          0         73          0 |        73 
+                   50 |         0          0          0         80          0 |        80 
+                   51 |         0          0          0         87          0 |        87 
+                   52 |         0          0          0         55          0 |        55 
+                   53 |         0          0          0         73          0 |        73 
+                   54 |         0          0          0         80          0 |        80 
+                   55 |         0          0          0         62          0 |        62 
+                   56 |         0          0          0         53          0 |        53 
+                   57 |         0          0          0         42          0 |        42 
+                   58 |         0          0          0         56          0 |        56 
+                   59 |         0          0          0         56          0 |        56 
+                   60 |         0          0          0         84          0 |        84 
+                   61 |         0          0          0         75          0 |        75 
+                   62 |         0          0          0         83          0 |        83 
+                   63 |         0          0          0         68          0 |        68 
+                   64 |         0          0          0         71          0 |        71 
+                   65 |         0          0          0          0         66 |        66 
+                   66 |         0          0          0          0         73 |        73 
+                   67 |         0          0          0          0         64 |        64 
+                   68 |         0          0          0          0         36 |        36 
+                   69 |         0          0          0          0         68 |        68 
+                   70 |         0          0          0          0         68 |        68 
+                   71 |         0          0          0          0         58 |        58 
+                   72 |         0          0          0          0         47 |        47 
+                   73 |         0          0          0          0         59 |        59 
+                   74 |         0          0          0          0         52 |        52 
+                   75 |         0          0          0          0         38 |        38 
+                   76 |         0          0          0          0         49 |        49 
+                   77 |         0          0          0          0         38 |        38 
+                   78 |         0          0          0          0         46 |        46 
+                   79 |         0          0          0          0         33 |        33 
+                   80 |         0          0          0          0         46 |        46 
+                   81 |         0          0          0          0         59 |        59 
+                   82 |         0          0          0          0         44 |        44 
+                   83 |         0          0          0          0         39 |        39 
+                   84 |         0          0          0          0         36 |        36 
+85. >= 85 years of ag |         0          0          0          0        170 |       170 
+----------------------+-------------------------------------------------------+----------
+                Total |     2,478      1,967      1,606      2,184      1,189 |     9,424 
+
+.                                                 //to feel confident that new variable was correctly genera
+> ted
+.                                                 
+. *Another option for checking this variable would be a combination of:
+. bysort agec: sum ridageyr // I can see the min and max age for each category
+
+------------------------------------------------------------------------------------------------------------
+-> agec = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      2,478    6.694512    3.370521          2         12
+
+------------------------------------------------------------------------------------------------------------
+-> agec = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      1,967    16.06151    1.971511         13         19
+
+------------------------------------------------------------------------------------------------------------
+-> agec = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      1,606    27.18991    4.553255         20         35
+
+------------------------------------------------------------------------------------------------------------
+-> agec = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      2,184    49.24038    8.414448         36         64
+
+------------------------------------------------------------------------------------------------------------
+-> agec = 5
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    ridageyr |      1,189     75.2111    6.685076         65         85
+
+
+. count if agec==. // confirm that I didn't accidentally generate any missings
+  0
+
+. 
+. *label the new variable and its values
+. label variable agec "Age Category (based on ridageyr)"
+
+. label define agec 1 "1:0-12" 2 "2:13-19" 3 "3:20-35" 4 "4:36-64" 5 "5:65-85"
+
+. label values agec agec
+
+. 
+. *Analysis: does tv hours vary by age?
+. format tv %10.2f
+
+. tab age, sum(tv)
+
+        Age |
+   Category |
+  (based on |            Summary of tv
+  ridageyr) |        Mean   Std. Dev.       Freq.
+------------+------------------------------------
+     1:0-12 |        2.31        1.78       2,454
+    2:13-19 |        2.65        2.08       1,913
+    3:20-35 |        2.45        1.88       1,606
+    4:36-64 |        2.50        1.98       2,183
+    5:65-85 |        3.35        2.22       1,184
+------------+------------------------------------
+      Total |        2.58        1.99       9,340
+
+. *this shows that not surprisingly, retirees watch the most TV, followed by
+. *teenagers
+. 
+. 
+. 
+. **************
+. * QUESTION 6 *
+. **************
+. 
+. *construct a table of mean tv hours by age group and sex
+. 
+. tab age riagendr, sum(tv) nost nof
+
+                                Means of tv
+
+       Age |
+  Category |
+ (based on |       Gender
+ ridageyr) |   1. Male  2. Female |     Total
+-----------+----------------------+----------
+    1:0-12 |      2.37       2.25 |      2.31
+   2:13-19 |      2.69       2.62 |      2.65
+   3:20-35 |      2.50       2.41 |      2.45
+   4:36-64 |      2.48       2.52 |      2.50
+   5:65-85 |      3.32       3.38 |      3.35
+-----------+----------------------+----------
+     Total |      2.61       2.55 |      2.58
+
+. 
+. *The table shows that there are not really any noticeable differences in 
+. *the number of hours of TV that men and women watch (by age)
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Do/
+> Exercise_5.log
+  log type:  text
+ closed on:  25 Feb 2021, 08:43:40
+------------------------------------------------------------------------------------------------------------

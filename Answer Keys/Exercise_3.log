@@ -1,0 +1,856 @@
+----------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/D
+> o/Exercise_3.log
+  log type:  text
+ opened on:  23 Feb 2021, 16:10:09
+
+. 
+. *FILE:    Exercise_3.do
+. *PURPOSE: Answer Key to Exercise 3
+. 
+. 
+. *This should be the path to your Original data folder, where you have saved the raw data file you just c
+> reated.
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original
+>  data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data
+
+. 
+. *Stata data
+. use S365students_raw.dta, clear
+(Soc 365 7 Student Survey Responses)
+
+. 
+. describe
+
+Contains data from S365students_raw.dta
+  obs:             7                          Soc 365 7 Student Survey Responses
+ vars:            12                          14 Feb 2021 15:47
+----------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+----------------------------------------------------------------------------------------------------------
+name            str18   %18s                  
+undergrad       float   %9.0g                 
+car             float   %9.0g                 
+soc357          float   %9.0g                 
+soc360          float   %9.0g                 
+soc361          float   %9.0g                 
+soc362          float   %9.0g                 
+interest        float   %9.0g                 
+stata           float   %9.0g                 
+feet            float   %9.0g                 
+inches          float   %9.0g                 
+id              float   %9.0g                 
+----------------------------------------------------------------------------------------------------------
+Sorted by: 
+
+. codebook
+
+----------------------------------------------------------------------------------------------------------
+name                                                                                           (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  string (str18)
+
+         unique values:  7                        missing "":  0/7
+
+            tabulation:  Freq.  Value
+                             1  "Chimamanda Adichie"
+                             1  "Haruki Murakami"
+                             1  "Isabel Allende"
+                             1  "Jack Kerouac"
+                             1  "James Baldwin"
+                             1  "Octavia Butler"
+                             1  "Zora Hurston"
+
+               warning:  variable has embedded blanks
+
+----------------------------------------------------------------------------------------------------------
+undergrad                                                                                      (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             2  0
+                             5  1
+
+----------------------------------------------------------------------------------------------------------
+car                                                                                            (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+       unique mv codes:  1                       missing .*:  2/7
+
+            tabulation:  Freq.  Value
+                             3  0
+                             2  1
+                             2  .n
+
+----------------------------------------------------------------------------------------------------------
+soc357                                                                                         (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             4  0
+                             3  1
+
+----------------------------------------------------------------------------------------------------------
+soc360                                                                                         (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             2  0
+                             5  1
+
+----------------------------------------------------------------------------------------------------------
+soc361                                                                                         (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,2]                        units:  1
+         unique values:  3                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             4  0
+                             2  1
+                             1  2
+
+----------------------------------------------------------------------------------------------------------
+soc362                                                                                         (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             5  0
+                             2  1
+
+----------------------------------------------------------------------------------------------------------
+interest                                                                                       (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [1,3]                        units:  1
+         unique values:  3                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             2  1
+                             3  2
+                             2  3
+
+----------------------------------------------------------------------------------------------------------
+stata                                                                                          (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             2  0
+                             5  1
+
+----------------------------------------------------------------------------------------------------------
+feet                                                                                           (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [5,6]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             6  5
+                             1  6
+
+----------------------------------------------------------------------------------------------------------
+inches                                                                                         (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,8]                        units:  1
+         unique values:  6                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             1  0
+                             1  2
+                             2  4
+                             1  5
+                             1  6
+                             1  8
+
+----------------------------------------------------------------------------------------------------------
+id                                                                                             (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [1,7]                        units:  1
+         unique values:  7                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             1  1
+                             1  2
+                             1  3
+                             1  4
+                             1  5
+                             1  6
+                             1  7
+
+. 
+. ***QUESTION 6***
+. 
+. *Label the data set
+. label data "Soc 365 7 Student Survey Responses"
+
+. 
+. *Add variable names (if not already entered into Stata directly) -- I did this directly 
+. /*
+> rename var1 name
+> rename var2 undergrad
+> rename var3 car
+> rename var4 soc357  
+> rename var5 soc360  
+> rename var6 soc361  
+> rename var7 soc362  
+> rename var8 interest   
+> rename var9 stata
+> rename var10 feet
+> rename var11 inches   
+> rename var12 id
+> */
+. 
+. 
+. *Variable labels
+. 
+. lab var id        "Identifier" // note that I added an id variable
+
+. lab var name      "name"
+
+. lab var undergrad "Undergraduate = 1, Graduate = 0"
+
+. lab var car       "CAR student?"
+
+. lab var soc357    "Has taken Soc 357 or equivalent"
+
+. lab var soc360    "Has taken Soc 360 or equivalent"
+
+. lab var soc361    "Has taken Soc 361"
+
+. lab var soc362    "Has taken Soc 362"
+
+. lab var interest  "Type of research interested in"
+
+. lab var stata     "Previous stata experience"   
+
+. lab var feet      "Height - feet"
+
+. lab var feet      "Height - inches"
+
+. 
+. 
+. *Assign value labels
+. 
+. * here, i create a yes/no label that can be applied to many variables
+. * notice that I made "not applicable" values .n so I could label them as such
+. * when I input the data in the Stata data editor, I put .n for the two grad students
+. * who left the CAR variable blank
+. lab define yesno_lbl 1 "1:Yes" 0 "0:No" .n "not applicable"
+
+. lab val car soc357 soc360 soc361 soc362 stata yesno_lbl 
+
+. 
+. note car: only undergrads can be CAR students. not applicable for grads. // added a note to "car" variab
+> le
+
+. 
+. lab define undergrad_lbl 1 "1:Undergrad Student" 2 "2:Graduate Student"
+
+. 
+. 
+. lab def interest_lbl 1 "1:academic" 2 "2:policy"  3 "3:business"
+
+. lab val interest interest_lbl
+
+. 
+. 
+. ***QUESTION 7***
+. 
+. *Describe content of data
+. 
+. describe
+
+Contains data from S365students_raw.dta
+  obs:             7                          Soc 365 7 Student Survey Responses
+ vars:            12                          14 Feb 2021 15:47
+----------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+----------------------------------------------------------------------------------------------------------
+name            str18   %18s                  name
+undergrad       float   %9.0g                 Undergraduate = 1, Graduate = 0
+car             float   %14.0g     yesno_lbl
+                                            * CAR student?
+soc357          float   %14.0g     yesno_lbl
+                                              Has taken Soc 357 or equivalent
+soc360          float   %14.0g     yesno_lbl
+                                              Has taken Soc 360 or equivalent
+soc361          float   %14.0g     yesno_lbl
+                                              Has taken Soc 361
+soc362          float   %14.0g     yesno_lbl
+                                              Has taken Soc 362
+interest        float   %10.0g     interest_lbl
+                                              Type of research interested in
+stata           float   %14.0g     yesno_lbl
+                                              Previous stata experience
+feet            float   %9.0g                 Height - inches
+inches          float   %9.0g                 
+id              float   %9.0g                 Identifier
+                                            * indicated variables have notes
+----------------------------------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. codebook
+
+----------------------------------------------------------------------------------------------------------
+name                                                                                                  name
+----------------------------------------------------------------------------------------------------------
+
+                  type:  string (str18)
+
+         unique values:  7                        missing "":  0/7
+
+            tabulation:  Freq.  Value
+                             1  "Chimamanda Adichie"
+                             1  "Haruki Murakami"
+                             1  "Isabel Allende"
+                             1  "Jack Kerouac"
+                             1  "James Baldwin"
+                             1  "Octavia Butler"
+                             1  "Zora Hurston"
+
+               warning:  variable has embedded blanks
+
+----------------------------------------------------------------------------------------------------------
+undergrad                                                                  Undergraduate = 1, Graduate = 0
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             2  0
+                             5  1
+
+----------------------------------------------------------------------------------------------------------
+car                                                                                           CAR student?
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  yesno_lbl
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+       unique mv codes:  1                       missing .*:  2/7
+
+            tabulation:  Freq.   Numeric  Label
+                             3         0  0:No
+                             2         1  1:Yes
+                             2        .n  not applicable
+
+----------------------------------------------------------------------------------------------------------
+soc357                                                                     Has taken Soc 357 or equivalent
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  yesno_lbl
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.   Numeric  Label
+                             4         0  0:No
+                             3         1  1:Yes
+
+----------------------------------------------------------------------------------------------------------
+soc360                                                                     Has taken Soc 360 or equivalent
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  yesno_lbl
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.   Numeric  Label
+                             2         0  0:No
+                             5         1  1:Yes
+
+----------------------------------------------------------------------------------------------------------
+soc361                                                                                   Has taken Soc 361
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  yesno_lbl, but 1 nonmissing value is not labeled
+
+                 range:  [0,2]                        units:  1
+         unique values:  3                        missing .:  0/7
+
+            tabulation:  Freq.   Numeric  Label
+                             4         0  0:No
+                             2         1  1:Yes
+                             1         2  
+
+----------------------------------------------------------------------------------------------------------
+soc362                                                                                   Has taken Soc 362
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  yesno_lbl
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.   Numeric  Label
+                             5         0  0:No
+                             2         1  1:Yes
+
+----------------------------------------------------------------------------------------------------------
+interest                                                                    Type of research interested in
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  interest_lbl
+
+                 range:  [1,3]                        units:  1
+         unique values:  3                        missing .:  0/7
+
+            tabulation:  Freq.   Numeric  Label
+                             2         1  1:academic
+                             3         2  2:policy
+                             2         3  3:business
+
+----------------------------------------------------------------------------------------------------------
+stata                                                                            Previous stata experience
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  yesno_lbl
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.   Numeric  Label
+                             2         0  0:No
+                             5         1  1:Yes
+
+----------------------------------------------------------------------------------------------------------
+feet                                                                                       Height - inches
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [5,6]                        units:  1
+         unique values:  2                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             6  5
+                             1  6
+
+----------------------------------------------------------------------------------------------------------
+inches                                                                                         (unlabeled)
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,8]                        units:  1
+         unique values:  6                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             1  0
+                             1  2
+                             2  4
+                             1  5
+                             1  6
+                             1  8
+
+----------------------------------------------------------------------------------------------------------
+id                                                                                              Identifier
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [1,7]                        units:  1
+         unique values:  7                        missing .:  0/7
+
+            tabulation:  Freq.  Value
+                             1  1
+                             1  2
+                             1  3
+                             1  4
+                             1  5
+                             1  6
+                             1  7
+
+. 
+. 
+. ***QUESTION 8***
+. 
+. *Check contents of data. We want to see if there are missing and/or unexpected values
+. tab undergrad, miss
+
+Undergradua |
+    te = 1, |
+ Graduate = |
+          0 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |          2       28.57       28.57
+          1 |          5       71.43      100.00
+------------+-----------------------------------
+      Total |          7      100.00
+
+. tab car, miss
+
+  CAR student? |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          3       42.86       42.86
+         1:Yes |          2       28.57       71.43
+not applicable |          2       28.57      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. tab soc357, miss
+
+ Has taken Soc |
+        357 or |
+    equivalent |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          4       57.14       57.14
+         1:Yes |          3       42.86      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. tab soc360, miss
+
+ Has taken Soc |
+        360 or |
+    equivalent |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          2       28.57       28.57
+         1:Yes |          5       71.43      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. tab soc361, miss
+
+ Has taken Soc |
+           361 |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          4       57.14       57.14
+         1:Yes |          2       28.57       85.71
+             2 |          1       14.29      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. tab soc362, miss
+
+ Has taken Soc |
+           362 |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          5       71.43       71.43
+         1:Yes |          2       28.57      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. tab interest, miss
+
+    Type of |
+   research |
+ interested |
+         in |      Freq.     Percent        Cum.
+------------+-----------------------------------
+ 1:academic |          2       28.57       28.57
+   2:policy |          3       42.86       71.43
+ 3:business |          2       28.57      100.00
+------------+-----------------------------------
+      Total |          7      100.00
+
+. tab stata, miss
+
+Previous stata |
+    experience |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          2       28.57       28.57
+         1:Yes |          5       71.43      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. tab id, miss
+
+ Identifier |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |          1       14.29       14.29
+          2 |          1       14.29       28.57
+          3 |          1       14.29       42.86
+          4 |          1       14.29       57.14
+          5 |          1       14.29       71.43
+          6 |          1       14.29       85.71
+          7 |          1       14.29      100.00
+------------+-----------------------------------
+      Total |          7      100.00
+
+. summarize feet, detail
+
+                       Height - inches
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            5              5
+ 5%            5              5
+10%            5              5       Obs                   7
+25%            5              5       Sum of Wgt.           7
+
+50%            5                      Mean           5.142857
+                        Largest       Std. Dev.      .3779645
+75%            5              5
+90%            6              5       Variance       .1428571
+95%            6              5       Skewness       2.041241
+99%            6              6       Kurtosis       5.166667
+
+. tab feet if feet==. // see if there are any missing values for this continuous variable
+no observations
+
+. summarize inches, detail
+
+                           inches
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              2
+10%            0              4       Obs                   7
+25%            2              4       Sum of Wgt.           7
+
+50%            4                      Mean           4.142857
+                        Largest       Std. Dev.      2.609506
+75%            6              4
+90%            8              5       Variance       6.809524
+95%            8              6       Skewness      -.1674696
+99%            8              8       Kurtosis          2.304
+
+. tab inches if inches==. // see if there are any missing values for this continuous variable
+no observations
+
+. 
+. 
+. * I notice that I have one unexpected value in the variable soc361.
+. * this is a dummy variable, so the only values should be 1 or 0, but there is
+. * one observation of 2. this could be a typo from when I entered the data.
+. * step 1 is to see who this person is:
+. list name id soc361 if soc361==2
+
+     +----------------------------------+
+     |               name   id   soc361 |
+     |----------------------------------|
+  5. | Chimamanda Adichie    5        2 |
+     +----------------------------------+
+
+. 
+. * I go back to my original surveys and check what value this should be
+. * I see that I made a typo. This should be a 1.
+. * I can fix it with "replace"
+. 
+. replace soc361=1 if id==5
+(1 real change made)
+
+. * note that I have specified that I only want to fix the one row of my data with id=5
+. * check my data:
+. list name id soc361 if id==5
+
+     +----------------------------------+
+     |               name   id   soc361 |
+     |----------------------------------|
+  5. | Chimamanda Adichie    5    1:Yes |
+     +----------------------------------+
+
+. *good, now Chimamanda is corrected. In this case, it's fine to use non-universal logic because its fixin
+> g a single random typo.
+. *let's make sure I didn't mess anything else up the process:
+. tab soc361, miss
+
+ Has taken Soc |
+           361 |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          4       57.14       57.14
+         1:Yes |          3       42.86      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. *good, when I compare this table to the table I made a few commands back (I can look in my
+. * stata window or my log file), this looks correct.
+. *I can even add a note:
+. note soc361: one typo identified and corrected. soc361=1 for observation id=5.
+
+. 
+. *There are two missing values on the variable "car". I chose to add them as a sepcific
+. *kind of missing by adding them as .n
+. *This allowed me to label them as "not applicable" and I added a note.
+. *If you just have them  missing values, you could recode this to 0
+. *or leave it as missing, both would be reasonable.
+. 
+. tab undergrad car, miss
+
+Undergradu |
+  ate = 1, |
+Graduate = |           CAR student?
+         0 |      0:No      1:Yes  not appli |     Total
+-----------+---------------------------------+----------
+         0 |         0          0          2 |         2 
+         1 |         3          2          0 |         5 
+-----------+---------------------------------+----------
+     Total |         3          2          2 |         7 
+
+. 
+. 
+. ***QUESTION 9***
+. 
+. *What percentage of obs are 5'6" or taller?
+. *There are a few ways you could do this, but I found this to be the most straight-forward
+. 
+. *Create a height in inches variable
+. 
+. gen height = (feet*12) + inches
+
+. 
+. *Check the variable creation by listing cases
+. 
+. list id feet inches height
+
+     +-----------------------------+
+     | id   feet   inches   height |
+     |-----------------------------|
+  1. |  1      5        2       62 |
+  2. |  2      6        0       72 |
+  3. |  3      5        8       68 |
+  4. |  4      5        4       64 |
+  5. |  5      5        4       64 |
+     |-----------------------------|
+  6. |  6      5        6       66 |
+  7. |  7      5        5       65 |
+     +-----------------------------+
+
+. * looks good!
+. 
+. *now let's label it properly so we know what it is
+. lab var height "total height in inches"
+
+. 
+. *5 foot 6 is 66 inches
+. * now let's create a dummy for whether each person if 66 inches or taller
+. gen height_5_6 = (height >= 66)
+
+. 
+. *Check the creation of this variable.
+. * I can see it works by looking at the min and max values in each of the categories
+. bysort height_5_6: summarize height
+
+----------------------------------------------------------------------------------------------------------
+-> height_5_6 = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      height |          4       63.75    1.258306         62         65
+
+----------------------------------------------------------------------------------------------------------
+-> height_5_6 = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      height |          3    68.66667     3.05505         66         72
+
+
+. 
+. *now let's label it properly so we know what it is
+. lab var height_5_6 "5ft6inches or taller=1, shorter than 5ft6inches=0'"
+
+. 
+. *See what percentage are over 5'6"
+. 
+. tab height_5_6
+
+ 5ft6inches |
+         or |
+  taller=1, |
+    shorter |
+       than |
+5ft6inches= |
+         0' |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |          4       57.14       57.14
+          1 |          3       42.86      100.00
+------------+-----------------------------------
+      Total |          7      100.00
+
+. 
+. 
+. *ANSWER: 42.86% are over 5'6"
+. 
+. ***QUESTION 10***
+. 
+. tab soc362, miss
+
+ Has taken Soc |
+           362 |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          0:No |          5       71.43       71.43
+         1:Yes |          2       28.57      100.00
+---------------+-----------------------------------
+         Total |          7      100.00
+
+. 
+. *28.57% have taken Soc 362.
+. 
+. *
+. * you should save this to your "modified data" folder. My path to that folder is:
+. 
+. save "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Modifi
+> ed data/Exercise3_Farr.dta", replace
+file /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Modified 
+> data/Exercise3_Farr.dta saved
+
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/D
+> o/Exercise_3.log
+  log type:  text
+ closed on:  23 Feb 2021, 16:10:09
+----------------------------------------------------------------------------------------------------------

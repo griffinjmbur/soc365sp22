@@ -1,0 +1,721 @@
+----------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/D
+> o/Exercise_4.log
+  log type:  text
+ opened on:  22 Feb 2021, 22:47:15
+
+. 
+. *FILE:    Exercise_4.do
+. *PURPOSE: Answer key to Exercise 4
+. 
+. 
+. *This should be the path to your Original data folder, where you have saved the raw data file you just c
+> reated.
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original
+>  data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data
+
+. 
+. 
+. use mtf_data.dta, clear
+(Monitoring the Future: A Continuing Study of American Youth (12th-Grade Survey),)
+
+. 
+. *describe data;
+. describe
+
+Contains data from mtf_data.dta
+  obs:         2,526                          Monitoring the Future: A Continuing Study of American
+                                                Youth (12th-Grade Survey),
+ vars:             6                          7 Oct 2012 08:49
+----------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+----------------------------------------------------------------------------------------------------------
+CASEID          int     %8.0g                 CASE IDENTIFICATION NUMBER
+V1108           int     %12.0g     V1108      101B013:5+DRK ROW/LST 2
+V1152           int     %8.0g                 101C005:R SPD >TIM R-UR
+V1163           int     %12.0g     V1163      101C008:FATHR EDUC LEVE
+V1164           int     %12.0g     V1164      101C009:MOTHR EDUC LEVE
+V1183           int     %12.0g     V1183      101C021D:R WL DO 4YR CLG
+----------------------------------------------------------------------------------------------------------
+Sorted by: 
+
+. 
+. **************
+. * QUESTION 2 *
+. **************
+. 
+. *Assign value labels to V1152
+. *follow the codebook
+. tab V1152, miss
+
+  101C005:R |
+   SPD >TIM |
+       R-UR |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        431       17.06       17.06
+          1 |         95        3.76       20.82
+          2 |        215        8.51       29.33
+          3 |        569       22.53       51.86
+          4 |        313       12.39       64.25
+          5 |        244        9.66       73.91
+          6 |        289       11.44       85.35
+          7 |        159        6.29       91.65
+          8 |        138        5.46       97.11
+          9 |         73        2.89      100.00
+------------+-----------------------------------
+      Total |      2,526      100.00
+
+. 
+. #delimit ; // I will be changing the delimiter back and forth to accomodate these long lines of code
+delimiter now ;
+. label define V1152 0 "0:Can't say; mixed; nonresponse" 
+>                                    1 "1:farm" 
+>                                    2 "2:country, non-farm" 
+>                                    3 "3:small city or town (<50,000)" 
+>                                    4 "4:medium-sized city (50,000-100,000)" 
+>                                    5 "5:suburb,medium-sized city" 
+>                                    6 "6:large city (100,000-500,000)" 
+>                                    7 "7:suburb,large city" 
+>                                    8 "8:very large city (>500,000)" 
+>                                    9 "9:suburb,very large city";
+
+.                                    #delimit cr
+delimiter now cr
+.                                    
+. label values V1152 V1152
+
+. tab V1152, miss
+
+             101C005:R SPD >TIM R-UR |      Freq.     Percent        Cum.
+-------------------------------------+-----------------------------------
+     0:Can't say; mixed; nonresponse |        431       17.06       17.06
+                              1:farm |         95        3.76       20.82
+                 2:country, non-farm |        215        8.51       29.33
+      3:small city or town (<50,000) |        569       22.53       51.86
+4:medium-sized city (50,000-100,000) |        313       12.39       64.25
+          5:suburb,medium-sized city |        244        9.66       73.91
+      6:large city (100,000-500,000) |        289       11.44       85.35
+                 7:suburb,large city |        159        6.29       91.65
+        8:very large city (>500,000) |        138        5.46       97.11
+            9:suburb,very large city |         73        2.89      100.00
+-------------------------------------+-----------------------------------
+                               Total |      2,526      100.00
+
+. *these value labels are probably too long - 
+. *you might be better off with shorter labels 
+. *that will not get truncated to such a degree;
+. 
+. **************
+. * QUESTION 3 *
+. ************** ;
+. 
+. *Recode V1152 to create a new 4-category variable;
+. recode V1152 1/3=1 4/5=2 6/9=3, gen(res_size)
+(2000 differences between V1152 and res_size)
+
+. 
+. #delimit ;
+delimiter now ;
+. label define res 0 "0:Can't say; mixed and nonresponse" 
+>                                  1 "1:Small (under 50,000)" 
+>                                  2 "2:Medium (50,000-100,000)" 
+>                                  3 "3:Large  (over 100,000)";
+
+. #delimit cr
+delimiter now cr
+. 
+. label values res_size res
+
+. 
+. *note some assumptions here - that farm/country have 
+. *populations less than 50,000 and that suburbs should be 
+. *linked with the urban area, regardless of suburbs' own population sizes
+. 
+. *check to make sure that the recode is as expected
+. tab V1152 res_size, miss
+
+   101C005:R SPD >TIM |  RECODE of V1152 (101C005:R SPD >TIM R-UR)
+                 R-UR | 0:Can't s  1:Small (  2:Medium   3:Large   |     Total
+----------------------+--------------------------------------------+----------
+0:Can't say; mixed; n |       431          0          0          0 |       431 
+               1:farm |         0         95          0          0 |        95 
+  2:country, non-farm |         0        215          0          0 |       215 
+3:small city or town  |         0        569          0          0 |       569 
+4:medium-sized city ( |         0          0        313          0 |       313 
+5:suburb,medium-sized |         0          0        244          0 |       244 
+6:large city (100,000 |         0          0          0        289 |       289 
+  7:suburb,large city |         0          0          0        159 |       159 
+8:very large city (>5 |         0          0          0        138 |       138 
+9:suburb,very large c |         0          0          0         73 |        73 
+----------------------+--------------------------------------------+----------
+                Total |       431        879        557        659 |     2,526 
+
+. 
+. 
+. **************
+. * QUESTION 4 *
+. **************
+. 
+. *Is population size related to expectations of completing college?
+. *My uninformed guess is that it is highest in largest cities
+. 
+. *(4a) Begin by constructing college expectations dichotomy
+. * first, I look at V1183
+. tab V1183, miss
+
+  101C021D:R |
+   WL DO 4YR |
+         CLG |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+MISSING:(-9) |        358       14.17       14.17
+DEF WONT:(1) |        156        6.18       20.35
+PRB WONT:(2) |        167        6.61       26.96
+PRB WILL:(3) |        501       19.83       46.79
+DEF WILL:(4) |      1,344       53.21      100.00
+-------------+-----------------------------------
+       Total |      2,526      100.00
+
+. 
+. * Now I create my new dichotomous variable
+. * I want 1 & 2 together (generally no) and 3 & 4 together (generally yes)
+. * I will make a dummy variable called "yes_coll" so I want 3 & 4 to be == 1
+. gen yes_coll=(V1183>=3)
+
+. 
+. 
+. *note that there are many other ways you could have constructed this variable - 
+. *some of which we have discussed in class
+. *recognize that those with missing values (-9) on the expectations 
+. *question will be included with "don't expect" - I don't want this 
+. *so will recode missing cases as missing
+. replace yes_coll=. if V1183==-9
+(358 real changes made, 358 to missing)
+
+. 
+. 
+. *label new variable
+. label variable yes_coll "Expect to complete college"
+
+. label define yesno 0 "0:No" 1 "1:Yes"
+
+. label values yes_coll yesno
+
+. 
+. *Tabulate new and original variable to check recode;
+. tab V1183 yes_coll, miss
+
+  101C021D:R |
+   WL DO 4YR |    Expect to complete college
+         CLG |      0:No      1:Yes          . |     Total
+-------------+---------------------------------+----------
+MISSING:(-9) |         0          0        358 |       358 
+DEF WONT:(1) |       156          0          0 |       156 
+PRB WONT:(2) |       167          0          0 |       167 
+PRB WILL:(3) |         0        501          0 |       501 
+DEF WILL:(4) |         0      1,344          0 |     1,344 
+-------------+---------------------------------+----------
+       Total |       323      1,845        358 |     2,526 
+
+. 
+. *(4b) now tabluate size of area of residence with 0-1 dichtomy for 
+. *college completion expecations;
+. tab res_size yes_coll // with just a simple two-way tab it's hard to tell--I need percentages!
+
+      RECODE of V1152 |  Expect to complete
+  (101C005:R SPD >TIM |        college
+                R-UR) |      0:No      1:Yes |     Total
+----------------------+----------------------+----------
+0:Can't say; mixed an |        49        166 |       215 
+1:Small (under 50,000 |       153        657 |       810 
+2:Medium (50,000-100, |        66        461 |       527 
+3:Large  (over 100,00 |        55        561 |       616 
+----------------------+----------------------+----------
+                Total |       323      1,845 |     2,168 
+
+. tab res_size yes_coll, row //I can add row-wise percentages
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+      RECODE of V1152 |  Expect to complete
+  (101C005:R SPD >TIM |        college
+                R-UR) |      0:No      1:Yes |     Total
+----------------------+----------------------+----------
+0:Can't say; mixed an |        49        166 |       215 
+                      |     22.79      77.21 |    100.00 
+----------------------+----------------------+----------
+1:Small (under 50,000 |       153        657 |       810 
+                      |     18.89      81.11 |    100.00 
+----------------------+----------------------+----------
+2:Medium (50,000-100, |        66        461 |       527 
+                      |     12.52      87.48 |    100.00 
+----------------------+----------------------+----------
+3:Large  (over 100,00 |        55        561 |       616 
+                      |      8.93      91.07 |    100.00 
+----------------------+----------------------+----------
+                Total |       323      1,845 |     2,168 
+                      |     14.90      85.10 |    100.00 
+
+. tab res_size yes_coll, row nofreq // i can even remove the frequencies because I don't need them
+
+      RECODE of V1152 |  Expect to complete
+  (101C005:R SPD >TIM |        college
+                R-UR) |      0:No      1:Yes |     Total
+----------------------+----------------------+----------
+0:Can't say; mixed an |     22.79      77.21 |    100.00 
+1:Small (under 50,000 |     18.89      81.11 |    100.00 
+2:Medium (50,000-100, |     12.52      87.48 |    100.00 
+3:Large  (over 100,00 |      8.93      91.07 |    100.00 
+----------------------+----------------------+----------
+                Total |     14.90      85.10 |    100.00 
+
+. 
+. *(4c) INTERPRETATION: People living in big cities are most likely of all categories to
+. *                                               expect to go to college. As population size decreases, s
+> o does the
+. *                                               percent of people who expect to go to college.
+. 
+. *note that the missing cases are not included in this tabulation;
+. 
+. 
+. **************
+. * QUESTION 5 *
+. **************
+. 
+. *Is population size related to experience of binge drinking?
+. *Again, my naive expectation is that binge drinking will be more common 
+. *in larger areas
+. tab V1108, miss
+
+101B013:5+DR |
+ K ROW/LST 2 |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+MISSING:(-9) |        171        6.77        6.77
+    NONE:(1) |      1,894       74.98       81.75
+    ONCE:(2) |        169        6.69       88.44
+   TWICE:(3) |        121        4.79       93.23
+    3-5X:(4) |        113        4.47       97.70
+    6-9X:(5) |         29        1.15       98.85
+10+ TIME:(6) |         29        1.15      100.00
+-------------+-----------------------------------
+       Total |      2,526      100.00
+
+. 
+. *(5a) First create the binge driking dichotomy - yes or no
+. gen binge=(V1108>1)
+
+. 
+. *again treat missing values as missing - i.e., exclude from analysis
+. replace binge=. if V1108==-9
+(171 real changes made, 171 to missing)
+
+. 
+. label variable binge "Any binge drinking within the past 2 weeks" // qw LEWs
+
+. label values binge yesno
+
+. 
+. *tabulate new and original variable to check recode
+. tab V1108 binge, miss
+
+             |  Any binge drinking within the
+101B013:5+DR |           past 2 weeks
+ K ROW/LST 2 |      0:No      1:Yes          . |     Total
+-------------+---------------------------------+----------
+MISSING:(-9) |         0          0        171 |       171 
+    NONE:(1) |     1,894          0          0 |     1,894 
+    ONCE:(2) |         0        169          0 |       169 
+   TWICE:(3) |         0        121          0 |       121 
+    3-5X:(4) |         0        113          0 |       113 
+    6-9X:(5) |         0         29          0 |        29 
+10+ TIME:(6) |         0         29          0 |        29 
+-------------+---------------------------------+----------
+       Total |     1,894        461        171 |     2,526 
+
+. 
+. 
+. *(5b) now tabluate size of area of residence with 0-1 dichtomy for 
+. *binge drinking experience
+. tab res_size binge, row nofreq
+
+                      |  Any binge drinking
+      RECODE of V1152 |   within the past 2
+  (101C005:R SPD >TIM |         weeks
+                R-UR) |      0:No      1:Yes |     Total
+----------------------+----------------------+----------
+0:Can't say; mixed an |     76.75      23.25 |    100.00 
+1:Small (under 50,000 |     80.71      19.29 |    100.00 
+2:Medium (50,000-100, |     82.42      17.58 |    100.00 
+3:Large  (over 100,00 |     80.45      19.55 |    100.00 
+----------------------+----------------------+----------
+                Total |     80.42      19.58 |    100.00 
+
+. 
+. *INTERPRETATION: Interestingly, there is not much of a relationship
+. *                                between size of residence and binge drinking. 
+. *                                About 20% binge drink across sizes of places.
+. *                                However, it seems that people who live in medium-sized cities
+. *                                are least likely to binge drink.
+. 
+. *note that the missing cases are not included in this tabulation;
+. 
+. **************
+. * QUESTION 6 *
+. ************** ;
+. 
+. *Are college expecations and binge drinking experiences related to 
+. *parents' educational attainment?
+. 
+. *(6a) First step is to construct a measure for highest educational attainment
+. *This is a bit more challenging than variables constructed above.
+. tab V1163, miss
+
+101C008:FATH |
+ R EDUC LEVE |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+MISSING:(-9) |        254       10.06       10.06
+GRDE SCH:(1) |         97        3.84       13.90
+ SOME HS:(2) |        252        9.98       23.87
+ HS GRAD:(3) |        623       24.66       48.54
+SOME CLG:(4) |        364       14.41       62.95
+CLG GRAD:(5) |        476       18.84       81.79
+GRAD SCH:(6) |        278       11.01       92.79
+      DK:(7) |        182        7.21      100.00
+-------------+-----------------------------------
+       Total |      2,526      100.00
+
+. tab V1164, miss
+
+101C009:MOTH |
+ R EDUC LEVE |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+MISSING:(-9) |        255       10.10       10.10
+GRDE SCH:(1) |         84        3.33       13.42
+ SOME HS:(2) |        190        7.52       20.94
+ HS GRAD:(3) |        536       21.22       42.16
+SOME CLG:(4) |        464       18.37       60.53
+CLG GRAD:(5) |        599       23.71       84.24
+GRAD SCH:(6) |        288       11.40       95.65
+      DK:(7) |        110        4.35      100.00
+-------------+-----------------------------------
+       Total |      2,526      100.00
+
+. 
+. *There are many different ways that you could do this -- Important thing
+. *is to check that you got it right. Is your distribution the same as mine?
+. 
+. *Recode both parental education variables so that missing or don't know 
+. *are system missing in Stata (.)
+. recode V1163 -9=. 7=.
+(V1163: 436 changes made)
+
+. recode V1164 -9=. 7=.
+(V1164: 365 changes made)
+
+. 
+. *Rename variables so that they're easier to work with ;
+. rename V1163 faed
+
+. rename V1164 maed
+
+. 
+. *Create new variable that equals parent's highest ed ;
+. 
+. /*Father has higher*/
+. gen hiedu=faed if faed > maed & faed != .
+(2,015 missing values generated)
+
+. *               this code creates a "hiedu" variable equal to father's education if
+. *               father's education is greater than mother's education and also not missing
+. *       It generated missing values for all cases that DON'T fit those conditions.
+. *               You can check by using "list faed maed hiedu in 1/50" to see that hiedu is
+. *               missing for rows where maed is higher, where maed and faed are equal,
+. *               or where faedu is missing.
+. 
+. /* Now we replace those missings when maedu is higher than faedu: */
+. replace hiedu=maed if maed > faed & maed != .
+(686 real changes made)
+
+. 
+. /*When they are equal, could be either*/
+. replace hiedu=faed if faed==maed & faed != .
+(855 real changes made)
+
+. 
+. /*If mother's is missing and father's isn't*/
+. replace hiedu=faed if maed == .   & faed != .
+(38 real changes made)
+
+.  
+. /*If father's is missing and mother's isn't*/
+. replace hiedu=maed if faed == .   & maed != . 
+(109 real changes made)
+
+. 
+. *labels
+. label variable hiedu "Highest educational level achieved by parents"
+
+. codebook maed // here I see that the value labels for maed is called V1164
+
+----------------------------------------------------------------------------------------------------------
+maed                                                                               101C009:MOTHR EDUC LEVE
+----------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+                 label:  V1164
+
+                 range:  [1,6]                        units:  1
+         unique values:  6                        missing .:  365/2,526
+
+            tabulation:  Freq.   Numeric  Label
+                            84         1  GRDE SCH:(1)
+                           190         2  SOME HS:(2)
+                           536         3  HS GRAD:(3)
+                           464         4  SOME CLG:(4)
+                           599         5  CLG GRAD:(5)
+                           288         6  GRAD SCH:(6)
+                           365         .  
+
+. // so I can apply those same vale labels to my new hiedu variable
+. label values hiedu V1164
+
+. 
+. *Look at different types of cases to make sure this worked;
+. list faed maed hiedu in 1/20
+
+     +--------------------------------------------+
+     |         faed           maed          hiedu |
+     |--------------------------------------------|
+  1. |            .              .              . |
+  2. |            .              .              . |
+  3. |            .              .              . |
+  4. |            .              .              . |
+  5. |            .              .              . |
+     |--------------------------------------------|
+  6. |            .              .              . |
+  7. |            .              .              . |
+  8. |            .              .              . |
+  9. |            .              .              . |
+ 10. | GRAD SCH:(6)    HS GRAD:(3)   GRAD SCH:(6) |
+     |--------------------------------------------|
+ 11. | CLG GRAD:(5)   SOME CLG:(4)   CLG GRAD:(5) |
+ 12. |            .              .              . |
+ 13. |            .              .              . |
+ 14. | SOME CLG:(4)    HS GRAD:(3)   SOME CLG:(4) |
+ 15. |            .              .              . |
+     |--------------------------------------------|
+ 16. |            .              .              . |
+ 17. | CLG GRAD:(5)   CLG GRAD:(5)   CLG GRAD:(5) |
+ 18. |  SOME HS:(2)   SOME CLG:(4)   SOME CLG:(4) |
+ 19. |            .              .              . |
+ 20. |  HS GRAD:(3)    SOME HS:(2)    HS GRAD:(3) |
+     +--------------------------------------------+
+
+. 
+. 
+. *All of the above cases worked correctly, but what about 
+. *cases in which either the father's ed or mother's ed is 
+. *missing and the other is not missing? ;
+. list faed maed hiedu if faed == . & maed ~= . in 1/100
+
+     +------------------------------------+
+     | faed           maed          hiedu |
+     |------------------------------------|
+ 52. |    .   GRDE SCH:(1)   GRDE SCH:(1) |
+ 59. |    .   GRDE SCH:(1)   GRDE SCH:(1) |
+ 97. |    .    HS GRAD:(3)    HS GRAD:(3) |
+     +------------------------------------+
+
+. list faed maed hiedu if faed ~= . & maed == . in 1/100
+
+     +----------------------------------+
+     |        faed   maed         hiedu |
+     |----------------------------------|
+ 63. | SOME HS:(2)      .   SOME HS:(2) |
+ 89. | SOME HS:(2)      .   SOME HS:(2) |
+     +----------------------------------+
+
+. 
+. *Great it seems like it's working.
+. 
+. 
+. *You could also use a three-way table to make sure the
+. *code works ;
+. bysort hiedu: tab maed faed, miss
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = GRDE SCH:(1)
+
+             |  101C008:FATHR EDUC
+101C009:MOTH |         LEVE
+ R EDUC LEVE | GRDE SCH:          . |     Total
+-------------+----------------------+----------
+GRDE SCH:(1) |        45          7 |        52 
+           . |         4          0 |         4 
+-------------+----------------------+----------
+       Total |        49          7 |        56 
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = SOME HS:(2)
+
+101C009:MOTH |     101C008:FATHR EDUC LEVE
+ R EDUC LEVE | GRDE SCH:  SOME HS:(          . |     Total
+-------------+---------------------------------+----------
+GRDE SCH:(1) |         0         11          0 |        11 
+ SOME HS:(2) |        15         76         16 |       107 
+           . |         0         10          0 |        10 
+-------------+---------------------------------+----------
+       Total |        15         97         16 |       128 
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = HS GRAD:(3)
+
+101C009:MOTH |           101C008:FATHR EDUC LEVE
+ R EDUC LEVE | GRDE SCH:  SOME HS:(  HS GRAD:(          . |     Total
+-------------+--------------------------------------------+----------
+GRDE SCH:(1) |         0          0         10          0 |        10 
+ SOME HS:(2) |         0          0         46          0 |        46 
+ HS GRAD:(3) |        12         52        262         30 |       356 
+           . |         0          0         10          0 |        10 
+-------------+--------------------------------------------+----------
+       Total |        12         52        328         30 |       422 
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = SOME CLG:(4)
+
+101C009:MOTH |                101C008:FATHR EDUC LEVE
+ R EDUC LEVE | GRDE SCH:  SOME HS:(  HS GRAD:(  SOME CLG:          . |     Total
+-------------+-------------------------------------------------------+----------
+GRDE SCH:(1) |         0          0          0          6          0 |         6 
+ SOME HS:(2) |         0          0          0         21          0 |        21 
+ HS GRAD:(3) |         0          0          0         76          0 |        76 
+SOME CLG:(4) |        10         56        119        126         28 |       339 
+           . |         0          0          0          7          0 |         7 
+-------------+-------------------------------------------------------+----------
+       Total |        10         56        119        236         28 |       449 
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = CLG GRAD:(5)
+
+101C009:MOTH |                      101C008:FATHR EDUC LEVE
+ R EDUC LEVE | GRDE SCH:  SOME HS:(  HS GRAD:(  SOME CLG:  CLG GRAD:          . |     Total
+-------------+------------------------------------------------------------------+----------
+GRDE SCH:(1) |         0          0          0          0          4          0 |         4 
+ SOME HS:(2) |         0          0          0          0         12          0 |        12 
+ HS GRAD:(3) |         0          0          0          0         75          0 |        75 
+SOME CLG:(4) |         0          0          0          0         92          0 |        92 
+CLG GRAD:(5) |         6         34        133         93        227         15 |       508 
+           . |         0          0          0          0          6          0 |         6 
+-------------+------------------------------------------------------------------+----------
+       Total |         6         34        133         93        416         15 |       697 
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = GRAD SCH:(6)
+
+101C009:MOTH |                           101C008:FATHR EDUC LEVE
+ R EDUC LEVE | GRDE SCH:  SOME HS:(  HS GRAD:(  SOME CLG:  CLG GRAD:  GRAD SCH:          . |     Total
+-------------+-----------------------------------------------------------------------------+----------
+GRDE SCH:(1) |         0          0          0          0          0          1          0 |         1 
+ SOME HS:(2) |         0          0          0          0          0          4          0 |         4 
+ HS GRAD:(3) |         0          0          0          0          0         29          0 |        29 
+SOME CLG:(4) |         0          0          0          0          0         33          0 |        33 
+CLG GRAD:(5) |         0          0          0          0          0         91          0 |        91 
+GRAD SCH:(6) |         5         13         43         35         60        119         13 |       288 
+           . |         0          0          0          0          0          1          0 |         1 
+-------------+-----------------------------------------------------------------------------+----------
+       Total |         5         13         43         35         60        278         13 |       447 
+
+----------------------------------------------------------------------------------------------------------
+-> hiedu = .
+
+             | 101C008:FA
+             |  THR EDUC
+101C009:MOTH |    LEVE
+ R EDUC LEVE |         . |     Total
+-------------+-----------+----------
+           . |       327 |       327 
+-------------+-----------+----------
+       Total |       327 |       327 
+
+
+. 
+. 
+. *You could also make a table to ascertain that 
+. *recode worked as planned;
+. table maed faed, miss c(mean hiedu)
+
+-------------------------------------------------------------------------------------------------
+101C009:MOTH |                              101C008:FATHR EDUC LEVE                              
+R EDUC LEVE  | GRDE SCH:(1)   SOME HS:(2)   HS GRAD:(3)  SOME CLG:(4)  CLG GRAD:(5)  GRAD SCH:(6)
+-------------+-----------------------------------------------------------------------------------
+GRDE SCH:(1) |            1             2             3             4             5             6
+ SOME HS:(2) |            2             2             3             4             5             6
+ HS GRAD:(3) |            3             3             3             4             5             6
+SOME CLG:(4) |            4             4             4             4             5             6
+CLG GRAD:(5) |            5             5             5             5             5             6
+GRAD SCH:(6) |            6             6             6             6             6             6
+-------------------------------------------------------------------------------------------------
+
+. // this makes a two-way table between maed and faed and fills it with the mean 
+. // hiedu value for people in each conditional category
+. 
+. 
+. *(6b) Now examine relationship between parents' education and 
+. *both college completion expectations and binge drinking experience;
+. tab hiedu yes_coll, row nofreq
+
+     Highest |
+ educational |
+       level |  Expect to complete
+ achieved by |        college
+     parents |      0:No      1:Yes |     Total
+-------------+----------------------+----------
+GRDE SCH:(1) |     32.08      67.92 |    100.00 
+ SOME HS:(2) |     27.83      72.17 |    100.00 
+ HS GRAD:(3) |     21.99      78.01 |    100.00 
+SOME CLG:(4) |     16.20      83.80 |    100.00 
+CLG GRAD:(5) |     11.72      88.28 |    100.00 
+GRAD SCH:(6) |      3.68      96.32 |    100.00 
+-------------+----------------------+----------
+       Total |     14.31      85.69 |    100.00 
+
+. tab hiedu binge, row nofreq
+
+     Highest |
+ educational |  Any binge drinking
+       level |   within the past 2
+ achieved by |         weeks
+     parents |      0:No      1:Yes |     Total
+-------------+----------------------+----------
+GRDE SCH:(1) |     90.00      10.00 |    100.00 
+ SOME HS:(2) |     84.87      15.13 |    100.00 
+ HS GRAD:(3) |     84.69      15.31 |    100.00 
+SOME CLG:(4) |     79.63      20.37 |    100.00 
+CLG GRAD:(5) |     79.37      20.63 |    100.00 
+GRAD SCH:(6) |     79.30      20.70 |    100.00 
+-------------+----------------------+----------
+       Total |     81.00      19.00 |    100.00 
+
+. 
+. 
+. *INTERPRETATION: People with more highly educated parents 
+. *                                are more likely to expect to go to 
+. *                                college. Interestingly, they are also 
+. *                                somewhat more likely to binge drink.
+. *                                Perhaps because they can better afford it? ;
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/D
+> o/Exercise_4.log
+  log type:  text
+ closed on:  22 Feb 2021, 22:47:16
+----------------------------------------------------------------------------------------------------------

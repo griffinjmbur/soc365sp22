@@ -1,0 +1,1369 @@
+----------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and
+>  exercises/Do/Exercise_6.log
+  log type:  text
+ opened on:   6 Apr 2021, 11:45:05
+
+. 
+. *FILE:    Exercise_6.do
+. *PURPOSE: Answer key to Exercise 6
+. 
+. 
+. *This should be the path to your Original data folder, where you have saved the raw data fil
+> e you just created.
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exerci
+> ses/Original data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Or
+> iginal data
+
+. 
+. use sysd.dta, clear
+(Sloan Study of Youth and Social Development, 1992-1997, Dataset 0001)
+
+. 
+. **************
+. * QUESTION 2 *
+. **************
+. 
+. *Change variables to lower case for easier manipulation
+. rename *, lower
+
+. 
+. *Investiage missing values
+. tab gender, miss
+
+  GENDER OF |
+    STUDENT |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       MALE |        414       42.37       42.37
+     FEMALE |        563       57.63      100.00
+------------+-----------------------------------
+      Total |        977      100.00
+
+. tab race, miss
+
+ Race/Ethnicity |
+     of student |      Freq.     Percent        Cum.
+----------------+-----------------------------------
+       HISPANIC |        140       14.33       14.33
+          BLACK |        150       15.35       29.68
+          WHITE |        550       56.29       85.98
+NATIVE AMERICAN |         12        1.23       87.21
+              . |        125       12.79      100.00
+----------------+-----------------------------------
+          Total |        977      100.00
+
+. tab grade, miss
+
+     GRADE OF |
+      STUDENT |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+            6 |        252       25.79       25.79
+            8 |        283       28.97       54.76
+           10 |        253       25.90       80.66
+           12 |        189       19.34      100.00
+--------------+-----------------------------------
+        Total |        977      100.00
+
+. 
+. *Note: only race has missing values
+. 
+. **************
+. * QUESTION 3 *
+. **************
+. *Create a varaible that measures missing on any of the three 3 variables (although only race
+>  has missing values)
+. gen miss_3 = (gender == . | race == . | grade == .)
+
+. 
+. *Check variable creation by listing first 20 rows for these variables
+. list miss_3 gender race grade in 1/20
+
+     +------------------------------------+
+     | miss_3   gender       race   grade |
+     |------------------------------------|
+  1. |      0     MALE   HISPANIC       6 |
+  2. |      0   FEMALE   HISPANIC       6 |
+  3. |      0   FEMALE   HISPANIC       6 |
+  4. |      0   FEMALE   HISPANIC       6 |
+  5. |      1     MALE          .       6 |
+     |------------------------------------|
+  6. |      0     MALE   HISPANIC       6 |
+  7. |      0     MALE   HISPANIC       6 |
+  8. |      0   FEMALE   HISPANIC       6 |
+  9. |      0   FEMALE   HISPANIC       6 |
+ 10. |      0   FEMALE   HISPANIC       6 |
+     |------------------------------------|
+ 11. |      0   FEMALE      WHITE       6 |
+ 12. |      0   FEMALE   HISPANIC       6 |
+ 13. |      0     MALE      WHITE       6 |
+ 14. |      0   FEMALE   HISPANIC       6 |
+ 15. |      0   FEMALE   HISPANIC       6 |
+     |------------------------------------|
+ 16. |      0   FEMALE      BLACK       6 |
+ 17. |      0   FEMALE   HISPANIC       8 |
+ 18. |      0   FEMALE      WHITE       8 |
+ 19. |      0   FEMALE   HISPANIC       8 |
+ 20. |      0     MALE   HISPANIC       8 |
+     +------------------------------------+
+
+. 
+. *Looks good so far, but this list doesn't show many cases where one var is missing.
+. 
+. *Look at some more with missings
+. list miss_3 gender race grade if gender ==. | race ==. | grade == . in 1/100
+
+     +--------------------------------+
+     | miss_3   gender   race   grade |
+     |--------------------------------|
+  5. |      1     MALE      .       6 |
+ 21. |      1     MALE      .       8 |
+ 41. |      1     MALE      .       8 |
+ 43. |      1   FEMALE      .       6 |
+ 52. |      1     MALE      .       8 |
+     |--------------------------------|
+ 53. |      1   FEMALE      .       8 |
+ 62. |      1   FEMALE      .       8 |
+ 64. |      1     MALE      .      12 |
+ 68. |      1   FEMALE      .      12 |
+ 71. |      1   FEMALE      .      12 |
+     +--------------------------------+
+
+. 
+. *List of cases shows that miss_3 is working
+. 
+. *12.79% of cases
+. tab miss_3, miss // we shouldn't having any "missings" for this variable, but include "miss"
+>  option to confirm
+
+     miss_3 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        852       87.21       87.21
+          1 |        125       12.79      100.00
+------------+-----------------------------------
+      Total |        977      100.00
+
+. 
+. 
+. 
+. **************
+. * QUESTION 4 *
+. **************
+. 
+. *Missing data on plans to go to college
+. tab sfis51, miss
+
+ R PLANS TO GO TO |
+          COLLEGE |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+       NO COLLEGE |         22        2.25        2.25
+  YES, AFTER H.S. |        613       62.74       64.99
+  YES, AFTER 1 YR |        124       12.69       77.69
+ YES, AFTER 1+ YR |         23        2.35       80.04
+      DO NOT KNOW |         70        7.16       87.21
+MULTIPLE RESPONSE |         13        1.33       88.54
+          MISSING |        112       11.46      100.00
+------------------+-----------------------------------
+            Total |        977      100.00
+
+. 
+. *Redo tabulation showing underlying values
+. numlabel, add
+
+. tab sfis51, miss
+
+    R PLANS TO GO TO |
+             COLLEGE |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+       1. NO COLLEGE |         22        2.25        2.25
+  2. YES, AFTER H.S. |        613       62.74       64.99
+  3. YES, AFTER 1 YR |        124       12.69       77.69
+ 4. YES, AFTER 1+ YR |         23        2.35       80.04
+      5. DO NOT KNOW |         70        7.16       87.21
+6. MULTIPLE RESPONSE |         13        1.33       88.54
+          9. MISSING |        112       11.46      100.00
+---------------------+-----------------------------------
+               Total |        977      100.00
+
+. 
+. *I would treat "multiple responses" (6) as missing because I know nothing about 
+. *the responses chosen 
+. *
+. *I would also probably treat "don't know" (5) as missing but this could be 
+. *meaningfully treated as its own separate category
+. *
+. *Code 9 "Missing" is clearly missing. 
+. 
+. 
+. 
+. 
+. **************
+. * QUESTION 5 *
+. **************
+. 
+. *Are there differences in who is missing SFIS51 by gender race and grade?
+. 
+. tab sfis51 gender, col
+
++-------------------+
+| Key               |
+|-------------------|
+|     frequency     |
+| column percentage |
++-------------------+
+
+    R PLANS TO GO TO |   GENDER OF STUDENT
+             COLLEGE |   1. MALE  2. FEMALE |     Total
+---------------------+----------------------+----------
+       1. NO COLLEGE |        12         10 |        22 
+                     |      2.90       1.78 |      2.25 
+---------------------+----------------------+----------
+  2. YES, AFTER H.S. |       252        361 |       613 
+                     |     60.87      64.12 |     62.74 
+---------------------+----------------------+----------
+  3. YES, AFTER 1 YR |        48         76 |       124 
+                     |     11.59      13.50 |     12.69 
+---------------------+----------------------+----------
+ 4. YES, AFTER 1+ YR |        13         10 |        23 
+                     |      3.14       1.78 |      2.35 
+---------------------+----------------------+----------
+      5. DO NOT KNOW |        33         37 |        70 
+                     |      7.97       6.57 |      7.16 
+---------------------+----------------------+----------
+6. MULTIPLE RESPONSE |         7          6 |        13 
+                     |      1.69       1.07 |      1.33 
+---------------------+----------------------+----------
+          9. MISSING |        49         63 |       112 
+                     |     11.84      11.19 |     11.46 
+---------------------+----------------------+----------
+               Total |       414        563 |       977 
+                     |    100.00     100.00 |    100.00 
+
+. tab sfis51 race, col
+
++-------------------+
+| Key               |
+|-------------------|
+|     frequency     |
+| column percentage |
++-------------------+
+
+    R PLANS TO GO TO |          Race/Ethnicity of student
+             COLLEGE | 2. HISPAN   3. BLACK   4. WHITE  5. NATIVE |     Total
+---------------------+--------------------------------------------+----------
+       1. NO COLLEGE |        12          2          8          0 |        22 
+                     |      8.57       1.33       1.45       0.00 |      2.58 
+---------------------+--------------------------------------------+----------
+  2. YES, AFTER H.S. |        63         96        367          6 |       532 
+                     |     45.00      64.00      66.73      50.00 |     62.44 
+---------------------+--------------------------------------------+----------
+  3. YES, AFTER 1 YR |        20         13         74          1 |       108 
+                     |     14.29       8.67      13.45       8.33 |     12.68 
+---------------------+--------------------------------------------+----------
+ 4. YES, AFTER 1+ YR |         1          5         13          0 |        19 
+                     |      0.71       3.33       2.36       0.00 |      2.23 
+---------------------+--------------------------------------------+----------
+      5. DO NOT KNOW |        16          7         39          2 |        64 
+                     |     11.43       4.67       7.09      16.67 |      7.51 
+---------------------+--------------------------------------------+----------
+6. MULTIPLE RESPONSE |         2          2          8          0 |        12 
+                     |      1.43       1.33       1.45       0.00 |      1.41 
+---------------------+--------------------------------------------+----------
+          9. MISSING |        26         25         41          3 |        95 
+                     |     18.57      16.67       7.45      25.00 |     11.15 
+---------------------+--------------------------------------------+----------
+               Total |       140        150        550         12 |       852 
+                     |    100.00     100.00     100.00     100.00 |    100.00 
+
+. tab sfis51 grade, col
+
++-------------------+
+| Key               |
+|-------------------|
+|     frequency     |
+| column percentage |
++-------------------+
+
+    R PLANS TO GO TO |              GRADE OF STUDENT
+             COLLEGE |         6          8         10         12 |     Total
+---------------------+--------------------------------------------+----------
+       1. NO COLLEGE |         6          8          7          1 |        22 
+                     |      2.38       2.83       2.77       0.53 |      2.25 
+---------------------+--------------------------------------------+----------
+  2. YES, AFTER H.S. |       137        163        170        143 |       613 
+                     |     54.37      57.60      67.19      75.66 |     62.74 
+---------------------+--------------------------------------------+----------
+  3. YES, AFTER 1 YR |        31         47         32         14 |       124 
+                     |     12.30      16.61      12.65       7.41 |     12.69 
+---------------------+--------------------------------------------+----------
+ 4. YES, AFTER 1+ YR |        11          6          4          2 |        23 
+                     |      4.37       2.12       1.58       1.06 |      2.35 
+---------------------+--------------------------------------------+----------
+      5. DO NOT KNOW |        18         26         19          7 |        70 
+                     |      7.14       9.19       7.51       3.70 |      7.16 
+---------------------+--------------------------------------------+----------
+6. MULTIPLE RESPONSE |         5          4          4          0 |        13 
+                     |      1.98       1.41       1.58       0.00 |      1.33 
+---------------------+--------------------------------------------+----------
+          9. MISSING |        44         29         17         22 |       112 
+                     |     17.46      10.25       6.72      11.64 |     11.46 
+---------------------+--------------------------------------------+----------
+               Total |       252        283        253        189 |       977 
+                     |    100.00     100.00     100.00     100.00 |    100.00 
+
+. * note: the way that I have formatted by tabulations, I see the percent of each gender/sex/r
+> ace/grade
+. * category that falls into each level of the sfis51 variable. This allows me to say:
+. * X percent of males are missing and X percent of females are missing.
+. 
+. *ANSWER from "eyeball" tests. 
+. *(1) There aren't big differences by gender 
+. *(2) Whites are the least likely to have missing or "don't know" values.
+. *(3) Students in lower grades are more likely to have missing and "dk" values.
+. 
+. 
+. *What about ttests?
+. 
+. *First create a dummy variable that indicates whether each respondent
+. *is missing or non missing on sfis51. Code as missing
+. *DK (5), multiple response (6), and missing (9)
+.  
+. gen miss_sfis51 = (sfis51 == 5 | sfis51 == 6 | sfis51 == 9)
+
+. 
+. *Check -- it worked
+. tab miss_sfis51 sfis51, miss
+
+miss_sfis5 |                     R PLANS TO GO TO COLLEGE
+         1 | 1. NO COL  2. YES, A  3. YES, A  4. YES, A  5. DO NOT  6. MULTIP |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |        22        613        124         23          0          0 |       782 
+         1 |         0          0          0          0         70         13 |       195 
+-----------+------------------------------------------------------------------+----------
+     Total |        22        613        124         23         70         13 |       977 
+
+
+           | R PLANS TO
+           |   GO TO
+miss_sfis5 |  COLLEGE
+         1 | 9. MISSIN |     Total
+-----------+-----------+----------
+         0 |         0 |       782 
+         1 |       112 |       195 
+-----------+-----------+----------
+     Total |       112 |       977 
+
+. 
+. *ttests
+. ttest gender, by(miss_sfis51)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 |     782    1.584399    .0176347    .4931407    1.549782    1.619016
+       1 |     195     1.54359    .0357612    .4993784    1.473059     1.61412
+---------+--------------------------------------------------------------------
+combined |     977    1.576254    .0158174    .4944042    1.545214    1.607294
+---------+--------------------------------------------------------------------
+    diff |            .0408092    .0395726               -.0368481    .1184665
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   1.0312
+Ho: diff = 0                                     degrees of freedom =      975
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.8487         Pr(|T| > |t|) = 0.3027          Pr(T > t) = 0.1513
+
+. ttest grade,  by(miss_sfis51)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 |     782    8.890026    .0760527    2.126758    8.740734    9.039318
+       1 |     195    8.317949    .1518489    2.120454    8.018462    8.617435
+---------+--------------------------------------------------------------------
+combined |     977    8.775844     .068359    2.136699    8.641697    8.909992
+---------+--------------------------------------------------------------------
+    diff |            .5720769    .1701331                .2382076    .9059461
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   3.3625
+Ho: diff = 0                                     degrees of freedom =      975
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9996         Pr(|T| > |t|) = 0.0008          Pr(T > t) = 0.0004
+
+. 
+. *RESULTS: 
+. * - No significant difference in gender in who is missing values of this var
+. * - Significant difference by grade. People in lower grades more likely to have missings.
+. 
+. 
+. /* - Race needs different code than what we learned in class. You could use a chi-square tes
+> t:
+> 
+> tab miss_sfis51 race, col chi
+> 
+>         // this tells us that there are significant differences across groups
+>         // depending on whether or not sfis51 is missing.
+>         // results indicate that missingness on sfis51 is not at random across racial groups
+> .
+>         */
+. 
+. **************
+. * QUESTION 6 *
+. **************
+. 
+. *asess missing data on reasons to attend college
+. tab1 sfis52a-sfis52l, miss
+
+-> tabulation of sfis52a  
+
+    HOW IMPORTANT ARE |
+     COLLEGE EXPENSES |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         38        3.89        3.89
+2. SOMEWHAT IMPORTANT |        135       13.82       17.71
+    3. VERY IMPORTANT |        220       22.52       40.23
+           9. MISSING |         49        5.02       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52b  
+
+     HOW IMPORTANT IS |
+        FINANCIAL AID |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         59        6.04        6.04
+2. SOMEWHAT IMPORTANT |         93        9.52       15.56
+    3. VERY IMPORTANT |        239       24.46       40.02
+ 6. MULTIPLE RESPONSE |          1        0.10       40.12
+           9. MISSING |         50        5.12       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52c  
+
+    HOW IMPORTANT ARE |
+     SPECIFIC COURSES |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         12        1.23        1.23
+2. SOMEWHAT IMPORTANT |         86        8.80       10.03
+    3. VERY IMPORTANT |        291       29.79       39.82
+           9. MISSING |         53        5.42       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52d  
+
+     HOW IMPORTANT IS |
+     COLLEGE ATHLETIC |
+               PROGRM |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |        214       21.90       21.90
+2. SOMEWHAT IMPORTANT |        126       12.90       34.80
+    3. VERY IMPORTANT |         51        5.22       40.02
+           9. MISSING |         51        5.22       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52e  
+
+     HOW IMPORTANT IS |
+SOCIAL LIFE AT SCHOOL |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         65        6.65        6.65
+2. SOMEWHAT IMPORTANT |        216       22.11       28.76
+    3. VERY IMPORTANT |        105       10.75       39.51
+ 6. MULTIPLE RESPONSE |          2        0.20       39.71
+           9. MISSING |         54        5.53       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52f  
+
+      HOW IMPT ATTEND |
+  COLLEGE AND LIVE AT |
+                 HOME |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |        234       23.95       23.95
+2. SOMEWHAT IMPORTANT |         93        9.52       33.47
+    3. VERY IMPORTANT |         64        6.55       40.02
+           9. MISSING |         51        5.22       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52g  
+
+      HOW IMPT ATTEND |
+COLLEGE & NOT LIVE AT |
+                   HM |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |        124       12.69       12.69
+2. SOMEWHAT IMPORTANT |        148       15.15       27.84
+    3. VERY IMPORTANT |        120       12.28       40.12
+           9. MISSING |         50        5.12       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52h  
+
+   HOW IMPORTANT IS A |
+RELIGIOUS ENVIRONMENT |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |        255       26.10       26.10
+2. SOMEWHAT IMPORTANT |        105       10.75       36.85
+    3. VERY IMPORTANT |         33        3.38       40.23
+           9. MISSING |         49        5.02       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52i  
+
+   HOW IMPORTANT IS A |
+LOW CRIME ENVIRONMENT |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         68        6.96        6.96
+2. SOMEWHAT IMPORTANT |        168       17.20       24.16
+    3. VERY IMPORTANT |        152       15.56       39.71
+ 6. MULTIPLE RESPONSE |          2        0.20       39.92
+           9. MISSING |         52        5.32       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52j  
+
+     HOW IMPORTANT IS |
+COLLEGE JOB PLACEMENT |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         40        4.09        4.09
+2. SOMEWHAT IMPORTANT |        163       16.68       20.78
+    3. VERY IMPORTANT |        184       18.83       39.61
+       8. DO NOT KNOW |          1        0.10       39.71
+           9. MISSING |         54        5.53       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52k  
+
+     HOW IMPORTANT IS |
+REPUTATION OF COLLEGE |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |         18        1.84        1.84
+2. SOMEWHAT IMPORTANT |        117       11.98       13.82
+    3. VERY IMPORTANT |        258       26.41       40.23
+           9. MISSING |         49        5.02       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+-> tabulation of sfis52l  
+
+   HOW IMPORTANT EASY |
+  ADMISSION STANDARDS |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+     1. NOT IMPORTANT |        171       17.50       17.50
+2. SOMEWHAT IMPORTANT |        135       13.82       31.32
+    3. VERY IMPORTANT |         82        8.39       39.71
+ 6. MULTIPLE RESPONSE |          2        0.20       39.92
+       8. DO NOT KNOW |          1        0.10       40.02
+           9. MISSING |         51        5.22       45.24
+                    . |        535       54.76      100.00
+----------------------+-----------------------------------
+                Total |        977      100.00
+
+. 
+. *ANSWER: there are three reasons for missing (or potentially missing) data here
+. *(1) multiple responses, 
+. *(2) Non-response (value of 9),
+. *(3) System missing (value of .)
+. 
+. *System missing (value of .) is by far the most common. Looking at the codebook,
+. *I suspect that some of the system missing may be the result of the skip pattern.
+. *It seems like some of these questions would be hard for younger students to answer:
+. *To test this:
+. 
+. tab grade sfis52a, miss
+
+                 |           HOW IMPORTANT ARE COLLEGE EXPENSES
+GRADE OF STUDENT | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------------+-------------------------------------------------------+----------
+               6 |         0          0          0          0        252 |       252 
+               8 |         0          0          0          0        283 |       283 
+              10 |        16         79        130         28          0 |       253 
+              12 |        22         56         90         21          0 |       189 
+-----------------+-------------------------------------------------------+----------
+           Total |        38        135        220         49        535 |       977 
+
+. 
+. *Confirmed! 6th and 8th graders were not asked these questions and marked as .
+. 
+. 
+. ********************************************
+. *    NOTE: CLEANING DEPENDENT VARIABLES    *
+. ********************************************
+. * This step was not asked of you and is sort of optional for this assignment.
+. * In theory, however, it's probably a good idea to do this first rather than
+. * jumping straight into the flag. However, since we know we are just going to drop
+. * these missings anyways, it may be fine to skip this (as in the original version
+. * of this answer key)
+. 
+. recode sfis52a (6/9=.), gen(sfis52a_clean) //clean: change to system missing
+(49 differences between sfis52a and sfis52a_clean)
+
+. lab values sfis52a_clean SFIS52A // apply labels to new variable
+
+. tab sfis52a sfis52a_clean, m // check variable creation--looks good
+
+                      |    RECODE of sfis52a (HOW IMPORTANT ARE
+    HOW IMPORTANT ARE |              COLLEGE EXPENSES)
+     COLLEGE EXPENSES | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        38          0          0          0 |        38 
+2. SOMEWHAT IMPORTANT |         0        135          0          0 |       135 
+    3. VERY IMPORTANT |         0          0        220          0 |       220 
+           9. MISSING |         0          0          0         49 |        49 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        38        135        220        584 |       977 
+
+. 
+. *repeat for other variables:
+. recode sfis52b (6/9=.), gen(sfis52b_clean)
+(51 differences between sfis52b and sfis52b_clean)
+
+. lab values sfis52b_clean SFIS52B
+
+. tab sfis52b sfis52b_clean, m
+
+                      |     RECODE of sfis52b (HOW IMPORTANT IS
+     HOW IMPORTANT IS |               FINANCIAL AID)
+        FINANCIAL AID | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        59          0          0          0 |        59 
+2. SOMEWHAT IMPORTANT |         0         93          0          0 |        93 
+    3. VERY IMPORTANT |         0          0        239          0 |       239 
+ 6. MULTIPLE RESPONSE |         0          0          0          1 |         1 
+           9. MISSING |         0          0          0         50 |        50 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        59         93        239        586 |       977 
+
+. 
+. recode sfis52c (6/9=.), gen(sfis52c_clean)
+(53 differences between sfis52c and sfis52c_clean)
+
+. lab values sfis52c_clean SFIS52C
+
+. tab sfis52c sfis52c_clean, m
+
+                      |    RECODE of sfis52c (HOW IMPORTANT ARE
+    HOW IMPORTANT ARE |              SPECIFIC COURSES)
+     SPECIFIC COURSES | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        12          0          0          0 |        12 
+2. SOMEWHAT IMPORTANT |         0         86          0          0 |        86 
+    3. VERY IMPORTANT |         0          0        291          0 |       291 
+           9. MISSING |         0          0          0         53 |        53 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        12         86        291        588 |       977 
+
+. 
+. recode sfis52d (6/9=.), gen(sfis52d_clean)
+(51 differences between sfis52d and sfis52d_clean)
+
+. lab values sfis52d_clean SFIS52D
+
+. tab sfis52d sfis52d_clean, m
+
+     HOW IMPORTANT IS | RECODE of sfis52d (HOW IMPORTANT IS COLLEGE
+     COLLEGE ATHLETIC |              ATHLETIC PROGRM)
+               PROGRM | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |       214          0          0          0 |       214 
+2. SOMEWHAT IMPORTANT |         0        126          0          0 |       126 
+    3. VERY IMPORTANT |         0          0         51          0 |        51 
+           9. MISSING |         0          0          0         51 |        51 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |       214        126         51        586 |       977 
+
+. 
+. recode sfis52e (6/9=.), gen(sfis52e_clean)
+(56 differences between sfis52e and sfis52e_clean)
+
+. lab values sfis52e_clean SFIS52E
+
+. tab sfis52e sfis52e_clean, m
+
+                      | RECODE of sfis52e (HOW IMPORTANT IS SOCIAL
+     HOW IMPORTANT IS |               LIFE AT SCHOOL)
+SOCIAL LIFE AT SCHOOL | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        65          0          0          0 |        65 
+2. SOMEWHAT IMPORTANT |         0        216          0          0 |       216 
+    3. VERY IMPORTANT |         0          0        105          0 |       105 
+ 6. MULTIPLE RESPONSE |         0          0          0          2 |         2 
+           9. MISSING |         0          0          0         54 |        54 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        65        216        105        591 |       977 
+
+. 
+. recode sfis52f (6/9=.), gen(sfis52f_clean)
+(51 differences between sfis52f and sfis52f_clean)
+
+. lab values sfis52f_clean SFIS52F
+
+. tab sfis52f sfis52f_clean, m
+
+      HOW IMPT ATTEND | RECODE of sfis52f (HOW IMPT ATTEND COLLEGE
+  COLLEGE AND LIVE AT |              AND LIVE AT HOME)
+                 HOME | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |       234          0          0          0 |       234 
+2. SOMEWHAT IMPORTANT |         0         93          0          0 |        93 
+    3. VERY IMPORTANT |         0          0         64          0 |        64 
+           9. MISSING |         0          0          0         51 |        51 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |       234         93         64        586 |       977 
+
+. 
+. recode sfis52g (6/9=.), gen(sfis52g_clean)
+(50 differences between sfis52g and sfis52g_clean)
+
+. lab values sfis52g_clean SFIS52G
+
+. tab sfis52g sfis52g_clean, m
+
+      HOW IMPT ATTEND | RECODE of sfis52g (HOW IMPT ATTEND COLLEGE
+COLLEGE & NOT LIVE AT |              & NOT LIVE AT HM)
+                   HM | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |       124          0          0          0 |       124 
+2. SOMEWHAT IMPORTANT |         0        148          0          0 |       148 
+    3. VERY IMPORTANT |         0          0        120          0 |       120 
+           9. MISSING |         0          0          0         50 |        50 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |       124        148        120        585 |       977 
+
+. 
+. recode sfis52h (6/9=.), gen(sfis52h_clean)
+(49 differences between sfis52h and sfis52h_clean)
+
+. lab values sfis52h_clean SFIS52H
+
+. tab sfis52h sfis52h_clean, m
+
+                      |    RECODE of sfis52h (HOW IMPORTANT IS A
+   HOW IMPORTANT IS A |           RELIGIOUS ENVIRONMENT)
+RELIGIOUS ENVIRONMENT | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |       255          0          0          0 |       255 
+2. SOMEWHAT IMPORTANT |         0        105          0          0 |       105 
+    3. VERY IMPORTANT |         0          0         33          0 |        33 
+           9. MISSING |         0          0          0         49 |        49 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |       255        105         33        584 |       977 
+
+. 
+. recode sfis52i (6/9=.), gen(sfis52i_clean)
+(54 differences between sfis52i and sfis52i_clean)
+
+. lab values sfis52i_clean SFIS52I
+
+. tab sfis52i sfis52i_clean, m
+
+                      |  RECODE of sfis52i (HOW IMPORTANT IS A LOW
+   HOW IMPORTANT IS A |             CRIME ENVIRONMENT)
+LOW CRIME ENVIRONMENT | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        68          0          0          0 |        68 
+2. SOMEWHAT IMPORTANT |         0        168          0          0 |       168 
+    3. VERY IMPORTANT |         0          0        152          0 |       152 
+ 6. MULTIPLE RESPONSE |         0          0          0          2 |         2 
+           9. MISSING |         0          0          0         52 |        52 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        68        168        152        589 |       977 
+
+. 
+. recode sfis52j (6/9=.), gen(sfis52j_clean)
+(55 differences between sfis52j and sfis52j_clean)
+
+. lab values sfis52j_clean SFIS52J
+
+. tab sfis52j sfis52j_clean, m
+
+                      | RECODE of sfis52j (HOW IMPORTANT IS COLLEGE
+     HOW IMPORTANT IS |               JOB PLACEMENT)
+COLLEGE JOB PLACEMENT | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        40          0          0          0 |        40 
+2. SOMEWHAT IMPORTANT |         0        163          0          0 |       163 
+    3. VERY IMPORTANT |         0          0        184          0 |       184 
+       8. DO NOT KNOW |         0          0          0          1 |         1 
+           9. MISSING |         0          0          0         54 |        54 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        40        163        184        590 |       977 
+
+. 
+. recode sfis52k (6/9=.), gen(sfis52k_clean)
+(49 differences between sfis52k and sfis52k_clean)
+
+. lab values sfis52k_clean SFIS52K
+
+. tab sfis52k sfis52k_clean, m
+
+                      |     RECODE of sfis52k (HOW IMPORTANT IS
+     HOW IMPORTANT IS |           REPUTATION OF COLLEGE)
+REPUTATION OF COLLEGE | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |        18          0          0          0 |        18 
+2. SOMEWHAT IMPORTANT |         0        117          0          0 |       117 
+    3. VERY IMPORTANT |         0          0        258          0 |       258 
+           9. MISSING |         0          0          0         49 |        49 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |        18        117        258        584 |       977 
+
+. 
+. recode sfis52l (6/9=.), gen(sfis52l_clean)
+(54 differences between sfis52l and sfis52l_clean)
+
+. lab values sfis52l_clean SFIS52L
+
+. tab sfis52l sfis52l_clean, m
+
+                      |    RECODE of sfis52l (HOW IMPORTANT EASY
+   HOW IMPORTANT EASY |            ADMISSION STANDARDS)
+  ADMISSION STANDARDS | 1. NOT IM  2. SOMEWH  3. VERY I          . |     Total
+----------------------+--------------------------------------------+----------
+     1. NOT IMPORTANT |       171          0          0          0 |       171 
+2. SOMEWHAT IMPORTANT |         0        135          0          0 |       135 
+    3. VERY IMPORTANT |         0          0         82          0 |        82 
+ 6. MULTIPLE RESPONSE |         0          0          0          2 |         2 
+       8. DO NOT KNOW |         0          0          0          1 |         1 
+           9. MISSING |         0          0          0         51 |        51 
+                    . |         0          0          0        535 |       535 
+----------------------+--------------------------------------------+----------
+                Total |       171        135         82        589 |       977 
+
+. 
+. * Now that you have cleaned versions of these variables, you could use them to construct the
+>  dummy below
+. 
+. **************
+. * QUESTION 7 *
+. **************
+. 
+. 
+. gen miss=sfis52a>3 | sfis52b>3 | sfis52c>3 | sfis52d>3 | sfis52e>3 | sfis52f>3 | sfis52g>3 |
+>  sfis52h>3 | sfis52i>3 | sfis52j>3 | sfis52k>3 | sfis52l>3
+
+. 
+. *check the variable creation
+. list miss sfis52a-sfis52l in 1/5 /*these are all missings*/
+
+     +--------------------------------------------------------------------------------------+
+  1. | miss | sfis52a | sfis52b | sfis52c | sfis52d | sfis52e | sfis52f | sfis52g | sfis52h |
+     |    1 |       . |       . |       . |       . |       . |       . |       . |       . |
+     |--------------------------------------------------------------------------------------|
+     |      sfis52i       |       sfis52j       |       sfis52k       |       sfis52l       |
+     |            .       |             .       |             .       |             .       |
+     +--------------------------------------------------------------------------------------+
+
+     +--------------------------------------------------------------------------------------+
+  2. | miss | sfis52a | sfis52b | sfis52c | sfis52d | sfis52e | sfis52f | sfis52g | sfis52h |
+     |    1 |       . |       . |       . |       . |       . |       . |       . |       . |
+     |--------------------------------------------------------------------------------------|
+     |      sfis52i       |       sfis52j       |       sfis52k       |       sfis52l       |
+     |            .       |             .       |             .       |             .       |
+     +--------------------------------------------------------------------------------------+
+
+     +--------------------------------------------------------------------------------------+
+  3. | miss | sfis52a | sfis52b | sfis52c | sfis52d | sfis52e | sfis52f | sfis52g | sfis52h |
+     |    1 |       . |       . |       . |       . |       . |       . |       . |       . |
+     |--------------------------------------------------------------------------------------|
+     |      sfis52i       |       sfis52j       |       sfis52k       |       sfis52l       |
+     |            .       |             .       |             .       |             .       |
+     +--------------------------------------------------------------------------------------+
+
+     +--------------------------------------------------------------------------------------+
+  4. | miss | sfis52a | sfis52b | sfis52c | sfis52d | sfis52e | sfis52f | sfis52g | sfis52h |
+     |    1 |       . |       . |       . |       . |       . |       . |       . |       . |
+     |--------------------------------------------------------------------------------------|
+     |      sfis52i       |       sfis52j       |       sfis52k       |       sfis52l       |
+     |            .       |             .       |             .       |             .       |
+     +--------------------------------------------------------------------------------------+
+
+     +--------------------------------------------------------------------------------------+
+  5. | miss | sfis52a | sfis52b | sfis52c | sfis52d | sfis52e | sfis52f | sfis52g | sfis52h |
+     |    1 |       . |       . |       . |       . |       . |       . |       . |       . |
+     |--------------------------------------------------------------------------------------|
+     |      sfis52i       |       sfis52j       |       sfis52k       |       sfis52l       |
+     |            .       |             .       |             .       |             .       |
+     +--------------------------------------------------------------------------------------+
+
+. list miss sfis52a-sfis52l in 65/70 /*look further into the file*/
+
+     +------------------------------------------------------------------------------+
+ 65. | miss |               sfis52a |               sfis52b |               sfis52c |
+     |    0 | 2. SOMEWHAT IMPORTANT |     3. VERY IMPORTANT |     3. VERY IMPORTANT |
+     |------------------------------------------------------------------------------|
+     |                sfis52d  |                sfis52e  |                sfis52f   |
+     |  2. SOMEWHAT IMPORTANT  |      3. VERY IMPORTANT  |       1. NOT IMPORTANT   |
+     |-------------------------+-------------------------+--------------------------|
+     |                sfis52g  |                sfis52h  |                sfis52i   |
+     |  2. SOMEWHAT IMPORTANT  |  2. SOMEWHAT IMPORTANT  |  2. SOMEWHAT IMPORTANT   |
+     |------------------------------------------------------------------------------|
+     |                sfis52j   |                 sfis52k   |             sfis52l   |
+     |      3. VERY IMPORTANT   |       3. VERY IMPORTANT   |    1. NOT IMPORTANT   |
+     +------------------------------------------------------------------------------+
+
+     +------------------------------------------------------------------------------+
+ 66. | miss |               sfis52a |               sfis52b |               sfis52c |
+     |    1 |     3. VERY IMPORTANT |     3. VERY IMPORTANT |     3. VERY IMPORTANT |
+     |------------------------------------------------------------------------------|
+     |                sfis52d  |                sfis52e  |                sfis52f   |
+     |      3. VERY IMPORTANT  |      3. VERY IMPORTANT  |      3. VERY IMPORTANT   |
+     |-------------------------+-------------------------+--------------------------|
+     |                sfis52g  |                sfis52h  |                sfis52i   |
+     |      3. VERY IMPORTANT  |             9. MISSING  |             9. MISSING   |
+     |------------------------------------------------------------------------------|
+     |                sfis52j   |                 sfis52k   |             sfis52l   |
+     |             9. MISSING   |              9. MISSING   |          9. MISSING   |
+     +------------------------------------------------------------------------------+
+
+     +------------------------------------------------------------------------------+
+ 67. | miss |               sfis52a |               sfis52b |               sfis52c |
+     |    0 | 2. SOMEWHAT IMPORTANT | 2. SOMEWHAT IMPORTANT |     3. VERY IMPORTANT |
+     |------------------------------------------------------------------------------|
+     |                sfis52d  |                sfis52e  |                sfis52f   |
+     |  2. SOMEWHAT IMPORTANT  |  2. SOMEWHAT IMPORTANT  |      3. VERY IMPORTANT   |
+     |-------------------------+-------------------------+--------------------------|
+     |                sfis52g  |                sfis52h  |                sfis52i   |
+     |       1. NOT IMPORTANT  |       1. NOT IMPORTANT  |  2. SOMEWHAT IMPORTANT   |
+     |------------------------------------------------------------------------------|
+     |                sfis52j   |                 sfis52k   |             sfis52l   |
+     |      3. VERY IMPORTANT   |       3. VERY IMPORTANT   |    1. NOT IMPORTANT   |
+     +------------------------------------------------------------------------------+
+
+     +------------------------------------------------------------------------------+
+ 68. | miss |               sfis52a |               sfis52b |               sfis52c |
+     |    1 |            9. MISSING |            9. MISSING |            9. MISSING |
+     |------------------------------------------------------------------------------|
+     |                sfis52d  |                sfis52e  |                sfis52f   |
+     |             9. MISSING  |             9. MISSING  |             9. MISSING   |
+     |-------------------------+-------------------------+--------------------------|
+     |                sfis52g  |                sfis52h  |                sfis52i   |
+     |             9. MISSING  |             9. MISSING  |             9. MISSING   |
+     |------------------------------------------------------------------------------|
+     |                sfis52j   |                 sfis52k   |             sfis52l   |
+     |             9. MISSING   |              9. MISSING   |          9. MISSING   |
+     +------------------------------------------------------------------------------+
+
+     +------------------------------------------------------------------------------+
+ 69. | miss |               sfis52a |               sfis52b |               sfis52c |
+     |    0 | 2. SOMEWHAT IMPORTANT | 2. SOMEWHAT IMPORTANT |     3. VERY IMPORTANT |
+     |------------------------------------------------------------------------------|
+     |                sfis52d  |                sfis52e  |                sfis52f   |
+     |       1. NOT IMPORTANT  |      3. VERY IMPORTANT  |       1. NOT IMPORTANT   |
+     |-------------------------+-------------------------+--------------------------|
+     |                sfis52g  |                sfis52h  |                sfis52i   |
+     |      3. VERY IMPORTANT  |       1. NOT IMPORTANT  |  2. SOMEWHAT IMPORTANT   |
+     |------------------------------------------------------------------------------|
+     |                sfis52j   |                 sfis52k   |             sfis52l   |
+     |      3. VERY IMPORTANT   |       3. VERY IMPORTANT   |   3. VERY IMPORTANT   |
+     +------------------------------------------------------------------------------+
+
+     +------------------------------------------------------------------------------+
+ 70. | miss |               sfis52a |               sfis52b |               sfis52c |
+     |    0 | 2. SOMEWHAT IMPORTANT |     3. VERY IMPORTANT | 2. SOMEWHAT IMPORTANT |
+     |------------------------------------------------------------------------------|
+     |                sfis52d  |                sfis52e  |                sfis52f   |
+     |      3. VERY IMPORTANT  |  2. SOMEWHAT IMPORTANT  |  2. SOMEWHAT IMPORTANT   |
+     |-------------------------+-------------------------+--------------------------|
+     |                sfis52g  |                sfis52h  |                sfis52i   |
+     |       1. NOT IMPORTANT  |  2. SOMEWHAT IMPORTANT  |      3. VERY IMPORTANT   |
+     |------------------------------------------------------------------------------|
+     |                sfis52j   |                 sfis52k   |             sfis52l   |
+     |  2. SOMEWHAT IMPORTANT   |   2. SOMEWHAT IMPORTANT   |   3. VERY IMPORTANT   |
+     +------------------------------------------------------------------------------+
+
+. 
+. 
+. tab miss sfis52a, miss
+
+           |           HOW IMPORTANT ARE COLLEGE EXPENSES
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |        35        125        205          0          0 |       365 
+         1 |         3         10         15         49        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |        38        135        220         49        535 |       977 
+
+. tab miss sfis52b, miss
+
+           |                  HOW IMPORTANT IS FINANCIAL AID
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  6. MULTIP  9. MISSIN          . |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |        54         86        225          0          0          0 |       365 
+         1 |         5          7         14          1         50        535 |       612 
+-----------+------------------------------------------------------------------+----------
+     Total |        59         93        239          1         50        535 |       977 
+
+. tab miss sfis52c, miss
+
+           |           HOW IMPORTANT ARE SPECIFIC COURSES
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |        10         79        276          0          0 |       365 
+         1 |         2          7         15         53        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |        12         86        291         53        535 |       977 
+
+. tab miss sfis52d, miss
+
+           |        HOW IMPORTANT IS COLLEGE ATHLETIC PROGRM
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |       198        119         48          0          0 |       365 
+         1 |        16          7          3         51        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |       214        126         51         51        535 |       977 
+
+. tab miss sfis52e, miss
+
+           |              HOW IMPORTANT IS SOCIAL LIFE AT SCHOOL
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  6. MULTIP  9. MISSIN          . |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |        61        205         99          0          0          0 |       365 
+         1 |         4         11          6          2         54        535 |       612 
+-----------+------------------------------------------------------------------+----------
+     Total |        65        216        105          2         54        535 |       977 
+
+. tab miss sfis52f, miss
+
+           |        HOW IMPT ATTEND COLLEGE AND LIVE AT HOME
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |       219         84         62          0          0 |       365 
+         1 |        15          9          2         51        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |       234         93         64         51        535 |       977 
+
+. tab miss sfis52g, miss
+
+           |        HOW IMPT ATTEND COLLEGE & NOT LIVE AT HM
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |       117        136        112          0          0 |       365 
+         1 |         7         12          8         50        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |       124        148        120         50        535 |       977 
+
+. tab miss sfis52h, miss
+
+           |        HOW IMPORTANT IS A RELIGIOUS ENVIRONMENT
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |       238         98         29          0          0 |       365 
+         1 |        17          7          4         49        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |       255        105         33         49        535 |       977 
+
+. tab miss sfis52i, miss
+
+           |             HOW IMPORTANT IS A LOW CRIME ENVIRONMENT
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  6. MULTIP  9. MISSIN          . |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |        65        160        140          0          0          0 |       365 
+         1 |         3          8         12          2         52        535 |       612 
+-----------+------------------------------------------------------------------+----------
+     Total |        68        168        152          2         52        535 |       977 
+
+. tab miss sfis52j, miss
+
+           |              HOW IMPORTANT IS COLLEGE JOB PLACEMENT
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  8. DO NOT  9. MISSIN          . |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |        38        155        172          0          0          0 |       365 
+         1 |         2          8         12          1         54        535 |       612 
+-----------+------------------------------------------------------------------+----------
+     Total |        40        163        184          1         54        535 |       977 
+
+. tab miss sfis52k, miss
+
+           |         HOW IMPORTANT IS REPUTATION OF COLLEGE
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  9. MISSIN          . |     Total
+-----------+-------------------------------------------------------+----------
+         0 |        14        108        243          0          0 |       365 
+         1 |         4          9         15         49        535 |       612 
+-----------+-------------------------------------------------------+----------
+     Total |        18        117        258         49        535 |       977 
+
+. tab miss sfis52l, miss
+
+           |              HOW IMPORTANT EASY ADMISSION STANDARDS
+      miss | 1. NOT IM  2. SOMEWH  3. VERY I  6. MULTIP  8. DO NOT  9. MISSIN |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |       162        125         78          0          0          0 |       365 
+         1 |         9         10          4          2          1         51 |       612 
+-----------+------------------------------------------------------------------+----------
+     Total |       171        135         82          2          1         51 |       977 
+
+
+           |    HOW
+           | IMPORTANT
+           |    EASY
+           | ADMISSION
+           | STANDARDS
+      miss |         . |     Total
+-----------+-----------+----------
+         0 |         0 |       365 
+         1 |       535 |       612 
+-----------+-----------+----------
+     Total |       535 |       977 
+
+. *variable creation looks correct
+. 
+. tab miss, miss
+
+       miss |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        365       37.36       37.36
+          1 |        612       62.64      100.00
+------------+-----------------------------------
+      Total |        977      100.00
+
+. 
+. *ANSWER: Almost 63% of respondents are missing on at least one of these variables
+. 
+. **************
+. * QUESTION 8 *
+. **************
+. 
+. drop if miss == 1
+(612 observations deleted)
+
+. 
+. *Check the drop - looks good
+. tab miss, m
+
+       miss |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        365      100.00      100.00
+------------+-----------------------------------
+      Total |        365      100.00
+
+. 
+. *Do I still have missing values for my other variables of interst (race, gender, grade)?
+. *Or did dropping missing on sfis52a-sfis52l fix the problem
+. 
+. tab miss_3, m
+
+     miss_3 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        311       85.21       85.21
+          1 |         54       14.79      100.00
+------------+-----------------------------------
+      Total |        365      100.00
+
+. 
+. * I see that I still have 54 missings for race/gender/grade. I will drop these  
+. * as well so that my sample size remains consistent across the final analysis
+. drop if miss_3 == 1
+(54 observations deleted)
+
+. 
+. *check:
+. tab miss_3, m
+
+     miss_3 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        311      100.00      100.00
+------------+-----------------------------------
+      Total |        311      100.00
+
+. 
+. 
+. *save modified data file with dropped observations
+. save "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exer
+> cises/Modified data/sysd_limited.dta", replace
+file /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercis
+> es/Modified data/sysd_limited.dta saved
+
+. 
+. **************
+. * QUESTION 9 *
+. **************
+. 
+. *What are the most important characteristics of colleges for students, by student characteri
+> stic?
+. 
+. *gender/sex
+. bysort gender: sum sfis52a-sfis52l
+
+----------------------------------------------------------------------------------------------
+-> gender = 1. MALE
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     sfis52a |        130    2.469231     .624915          1          3
+     sfis52b |        130    2.407692    .7439279          1          3
+     sfis52c |        130    2.692308    .5110584          1          3
+     sfis52d |        130    1.769231    .7526538          1          3
+     sfis52e |        130    2.138462    .6318896          1          3
+-------------+---------------------------------------------------------
+     sfis52f |        130    1.530769    .7064318          1          3
+     sfis52g |        130    1.984615    .7674039          1          3
+     sfis52h |        130    1.469231    .6610828          1          3
+     sfis52i |        130    2.076923     .700115          1          3
+     sfis52j |        130    2.315385    .6474112          1          3
+-------------+---------------------------------------------------------
+     sfis52k |        130    2.607692    .5355017          1          3
+     sfis52l |        130    1.830769     .788861          1          3
+
+----------------------------------------------------------------------------------------------
+-> gender = 2. FEMALE
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     sfis52a |        181    2.508287    .6800227          1          3
+     sfis52b |        181    2.524862     .734613          1          3
+     sfis52c |        181    2.751381    .5153863          1          3
+     sfis52d |        181    1.475138    .6630658          1          3
+     sfis52e |        181    2.060773    .6680465          1          3
+-------------+---------------------------------------------------------
+     sfis52f |        181    1.624309    .8180364          1          3
+     sfis52g |        181           2    .8232726          1          3
+     sfis52h |        181    1.430939    .6428528          1          3
+     sfis52i |        181    2.309392    .7018786          1          3
+     sfis52j |        181     2.39779    .6723058          1          3
+-------------+---------------------------------------------------------
+     sfis52k |        181    2.640884    .5659675          1          3
+     sfis52l |        181    1.756906    .7863554          1          3
+
+
+. 
+. *ANSWER the highest value for both boys and girls is for sfis52c (specific courses) 
+. 
+. *By race 
+. bysort race: sum sfis52a-sfis52l
+
+----------------------------------------------------------------------------------------------
+-> race = 2. HISPANIC
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     sfis52a |         36        2.75     .439155          2          3
+     sfis52b |         36    2.833333    .4472136          1          3
+     sfis52c |         36    2.638889     .592948          1          3
+     sfis52d |         36    1.805556    .8218253          1          3
+     sfis52e |         36    2.111111    .6666667          1          3
+-------------+---------------------------------------------------------
+     sfis52f |         36    2.055556    .8261596          1          3
+     sfis52g |         36    1.777778    .8319035          1          3
+     sfis52h |         36    1.388889    .5491696          1          3
+     sfis52i |         36    2.194444    .7099072          1          3
+     sfis52j |         36    2.416667    .6035609          1          3
+-------------+---------------------------------------------------------
+     sfis52k |         36    2.527778    .5599036          1          3
+     sfis52l |         36    2.138889    .7616815          1          3
+
+----------------------------------------------------------------------------------------------
+-> race = 3. BLACK
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     sfis52a |         51    2.509804    .7034927          1          3
+     sfis52b |         51    2.764706    .5133512          1          3
+     sfis52c |         51    2.843137      .36729          2          3
+     sfis52d |         51    1.607843    .7232823          1          3
+     sfis52e |         51    2.137255    .6330753          1          3
+-------------+---------------------------------------------------------
+     sfis52f |         51    1.705882    .8554325          1          3
+     sfis52g |         51    2.117647    .7911273          1          3
+     sfis52h |         51    1.843137    .8336078          1          3
+     sfis52i |         51    2.372549    .7472827          1          3
+     sfis52j |         51    2.588235    .5357787          1          3
+-------------+---------------------------------------------------------
+     sfis52k |         51    2.490196    .6441288          1          3
+     sfis52l |         51    1.941176    .7851564          1          3
+
+----------------------------------------------------------------------------------------------
+-> race = 4. WHITE
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     sfis52a |        220    2.440909    .6697366          1          3
+     sfis52b |        220    2.359091    .7840645          1          3
+     sfis52c |        220    2.718182    .5169602          1          3
+     sfis52d |        220    1.554545    .6902632          1          3
+     sfis52e |        220    2.081818    .6569866          1          3
+-------------+---------------------------------------------------------
+     sfis52f |        220    1.468182    .7047694          1          3
+     sfis52g |        220    2.004545    .7909172          1          3
+     sfis52h |        220    1.359091    .5758925          1          3
+     sfis52i |        220    2.177273    .6959976          1          3
+     sfis52j |        220    2.304545    .6844504          1          3
+-------------+---------------------------------------------------------
+     sfis52k |        220    2.668182    .5268034          1          3
+     sfis52l |        220    1.681818    .7696506          1          3
+
+----------------------------------------------------------------------------------------------
+-> race = 5. NATIVE AMERICAN
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     sfis52a |          4        2.75          .5          2          3
+     sfis52b |          4           2    .8164966          1          3
+     sfis52c |          4         2.5           1          1          3
+     sfis52d |          4           2    .8164966          1          3
+     sfis52e |          4           2    .8164966          1          3
+-------------+---------------------------------------------------------
+     sfis52f |          4        2.25    .9574271          1          3
+     sfis52g |          4        1.75    .9574271          1          3
+     sfis52h |          4        1.75    .9574271          1          3
+     sfis52i |          4        2.25    .9574271          1          3
+     sfis52j |          4        2.25    .9574271          1          3
+-------------+---------------------------------------------------------
+     sfis52k |          4           3           0          3          3
+     sfis52l |          4         2.5    .5773503          2          3
+
+
+.   
+. *ANSWER:
+.         *The highest value for Hispanic/Latino students is sfis52b (Financial aid)
+.         *The highest value for white and black students is sfis52c (specific courses)
+.         *The highest value for Native Americans is sfis52k (reputation of college) 
+.                 *But note very small number of observations for native americans
+.                 *I wouldn't feel comfortable reporting this given small sample size
+. 
+. * NOTE that the sample size for both analyses was the same: 311
+.                 
+.                 
+. log close
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and
+>  exercises/Do/Exercise_6.log
+  log type:  text
+ closed on:   6 Apr 2021, 11:45:05
+----------------------------------------------------------------------------------------------

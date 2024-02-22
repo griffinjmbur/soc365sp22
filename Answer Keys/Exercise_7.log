@@ -1,0 +1,556 @@
+-----------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exerci
+> ses/Do/Exercise_7.log
+  log type:  text
+ opened on:   6 Apr 2021, 16:11:13
+
+. 
+. *FILE:    Exercise_7.do
+. *PURPOSE: Answer key to Exercise 7
+. 
+. 
+. *This should be the path to your Original data folder, where you have saved the raw data file you j
+> ust created.
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Ori
+> ginal data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original 
+> data
+
+. 
+. ***Examine the data
+. 
+. *Householder data
+. use sscouples2000_hhldr.dta, clear
+(Same-sex Cohabiting Couples, 2000 Census)
+
+. describe
+
+Contains data from sscouples2000_hhldr.dta
+  obs:         5,081                          Same-sex Cohabiting Couples, 2000 Census
+ vars:             9                          6 Mar 2014 12:38
+-----------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------
+serial          long    %10.0g     seriallbl
+                                              Household serial number
+datanum         byte    %8.0g      datanumlbl
+                                              Data set number
+age1            byte    %36.0g     agelbl     Age
+sex1            byte    %8.0g      sexlbl     Sex
+re1             byte    %13.0g     re         Race/ethnicity
+educ1           byte    %9.0g      educ       Education category
+statefip        byte    %57.0g     statefiplbl
+                                              State (FIPS code)
+metarea         int     %43.0g     metarealbl
+                                              Metropolitan area [general version]
+rel_var         byte    %12.0g     rel_var    Relationship type
+-----------------------------------------------------------------------------------------------------
+Sorted by: serial
+
+.         
+. *Nonhouseholder data
+. use sscouples2000_nonhhldr.dta, clear
+(Same-sex Cohabiting Couples, 2000 Census)
+
+. describe
+
+Contains data from sscouples2000_nonhhldr.dta
+  obs:         5,081                          Same-sex Cohabiting Couples, 2000 Census
+ vars:             9                          6 Mar 2014 12:38
+-----------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------
+serial          long    %10.0g     seriallbl
+                                              Household serial number
+datanum         byte    %8.0g      datanumlbl
+                                              Data set number
+age0            byte    %36.0g     agelbl     Age
+sex0            byte    %8.0g      sexlbl     Sex
+re0             byte    %13.0g     re         Race/ethnicity
+educ0           byte    %9.0g      educ       Education category
+statefip        byte    %57.0g     statefiplbl
+                                              State (FIPS code)
+metarea         int     %43.0g     metarealbl
+                                              Metropolitan area [general version]
+rel_var         byte    %12.0g     rel_var    Relationship type
+-----------------------------------------------------------------------------------------------------
+Sorted by: serial
+
+. 
+. **************
+. * QUESTION 2 *
+. **************
+. 
+. ***Merge data for householders and non-householders to create
+. ***one record per couple
+. 
+. merge 1:1 serial using sscouples2000_hhldr.dta
+(label educ already defined)
+(label rel_var already defined)
+(label metarealbl already defined)
+(label statefiplbl already defined)
+(label sexlbl already defined)
+(label agelbl already defined)
+(label re already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             5,081  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |      5,081      100.00      100.00
+------------------------+-----------------------------------
+                  Total |      5,081      100.00
+
+. drop _merge
+
+. 
+. *Everyone in the householder data was merged to a partner in the non-householder
+. *file. (_merge == 3)
+. 
+. *Let's look at some of the data
+. list serial age0 age1 sex0 sex1 in 1/10
+
+     +----------------------------------------+
+     | serial   age0   age1     sex0     sex1 |
+     |----------------------------------------|
+  1. |    331     43     44     Male     Male |
+  2. |    355     26     24   Female   Female |
+  3. |    425     28     31     Male     Male |
+  4. |    598     28     32     Male     Male |
+  5. |   1301     50     56   Female   Female |
+     |----------------------------------------|
+  6. |   1874     45     49   Female   Female |
+  7. |   2886     32     46   Female   Female |
+  8. |   3796     26     32     Male     Male |
+  9. |   3862     38     39   Female   Female |
+ 10. |   4147     31     30   Female   Female |
+     +----------------------------------------+
+
+. 
+. * here I'm just performing a check to confirm that all of our couples are same-sex
+. list serial sex1 sex0 if sex1!=sex0
+
+. 
+. *Looks like it worked. We have same-sex male and female couples.
+. 
+. *If you wanted to be really thorough, you might also check that the age difference
+. *between partners wasn't suspiciously large:
+.         /*
+>         
+>         gen agediff = abs(age1-age0) // here I create a variable that shows the difference in age.
+>                                                                 // I have used the function abs() t
+> o make this an absolutel value
+>         sum agediff, detail
+> 
+>         sort agediff
+>         list agediff rel_var age0 educ0 age1 educ1 if agediff>25
+>                 // here I am listing all couples with an age difference that puts them above
+>                 // the 99th percentile for this variable
+>                 // there's not a ton of information that I can use to make a decision about these
+>                 // outliers, so I might just leave them. Or I could create a flag to run a 
+>                 // robustness check to see if my final results differeed if I were to exclude them.
+> 
+>         sort serial
+>         
+>         */
+. 
+. **************
+. * QUESTION 3 *
+. **************
+. 
+. *For now only look at same-sex male couples
+. tab sex0
+
+        Sex |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       Male |      2,437       47.96       47.96
+     Female |      2,644       52.04      100.00
+------------+-----------------------------------
+      Total |      5,081      100.00
+
+. tab sex0, nolab
+
+        Sex |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      2,437       47.96       47.96
+          2 |      2,644       52.04      100.00
+------------+-----------------------------------
+      Total |      5,081      100.00
+
+. 
+. keep if sex0 == 1 & sex1 == 1
+(2,644 observations deleted)
+
+. 
+. *Check
+. tab sex0 sex1
+
+           |    Sex
+       Sex |      Male |     Total
+-----------+-----------+----------
+      Male |     2,437 |     2,437 
+-----------+-----------+----------
+     Total |     2,437 |     2,437 
+
+. 
+. 
+. **************
+. * QUESTION 4 *
+. **************
+. 
+. ***Variable that indicates they are in the same ed category
+.         
+. *Check to see if we have to deal with missing values
+. tab educ0 educ1, miss
+
+ Education |             Education category
+  category |     1:<12       2:12    3:13-15     4:>=16 |     Total
+-----------+--------------------------------------------+----------
+     1:<12 |       137         75         37         12 |       261 
+      2:12 |        75        300        212         96 |       683 
+   3:13-15 |        23        122        313        273 |       731 
+    4:>=16 |        12         50        170        530 |       762 
+-----------+--------------------------------------------+----------
+     Total |       247        547        732        911 |     2,437 
+
+.         
+. *No, we don't
+.         
+. *Create variable
+. gen sameeduc = (educ0 == educ1)
+
+.         
+. *Check to make sure the variable creation worked
+. bysort sameeduc: tab educ0 educ1
+
+-----------------------------------------------------------------------------------------------------
+-> sameeduc = 0
+
+ Education |             Education category
+  category |     1:<12       2:12    3:13-15     4:>=16 |     Total
+-----------+--------------------------------------------+----------
+     1:<12 |         0         75         37         12 |       124 
+      2:12 |        75          0        212         96 |       383 
+   3:13-15 |        23        122          0        273 |       418 
+    4:>=16 |        12         50        170          0 |       232 
+-----------+--------------------------------------------+----------
+     Total |       110        247        419        381 |     1,157 
+
+-----------------------------------------------------------------------------------------------------
+-> sameeduc = 1
+
+ Education |             Education category
+  category |     1:<12       2:12    3:13-15     4:>=16 |     Total
+-----------+--------------------------------------------+----------
+     1:<12 |       137          0          0          0 |       137 
+      2:12 |         0        300          0          0 |       300 
+   3:13-15 |         0          0        313          0 |       313 
+    4:>=16 |         0          0          0        530 |       530 
+-----------+--------------------------------------------+----------
+     Total |       137        300        313        530 |     1,280 
+
+
+. sort serial
+
+. list sameeduc educ0 educ1 in 1/20
+
+     +------------------------------+
+     | sameeduc     educ0     educ1 |
+     |------------------------------|
+  1. |        1      2:12      2:12 |
+  2. |        1      2:12      2:12 |
+  3. |        1   3:13-15   3:13-15 |
+  4. |        1      2:12      2:12 |
+  5. |        1    4:>=16    4:>=16 |
+     |------------------------------|
+  6. |        0      2:12   3:13-15 |
+  7. |        1    4:>=16    4:>=16 |
+  8. |        1    4:>=16    4:>=16 |
+  9. |        1    4:>=16    4:>=16 |
+ 10. |        0      2:12   3:13-15 |
+     |------------------------------|
+ 11. |        1   3:13-15   3:13-15 |
+ 12. |        0   3:13-15    4:>=16 |
+ 13. |        1      2:12      2:12 |
+ 14. |        1   3:13-15   3:13-15 |
+ 15. |        1     1:<12     1:<12 |
+     |------------------------------|
+ 16. |        1   3:13-15   3:13-15 |
+ 17. |        1   3:13-15   3:13-15 |
+ 18. |        1      2:12      2:12 |
+ 19. |        0      2:12    4:>=16 |
+ 20. |        1      2:12      2:12 |
+     +------------------------------+
+
+.         
+. *Creation of sameeduc appears to have worked
+. 
+. 
+. **************
+. * QUESTION 5 *
+. **************
+.         
+. *What proportion share the same education? ANSWER: About 53%
+. tab sameeduc
+
+   sameeduc |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,157       47.48       47.48
+          1 |      1,280       52.52      100.00
+------------+-----------------------------------
+      Total |      2,437      100.00
+
+. 
+.         
+. **************
+. * QUESTION 6 *
+. **************
+. 
+. *How does this vary by the householder's education?
+. tab educ1 sameeduc, row nofreq
+
+ Education |       sameeduc
+  category |         0          1 |     Total
+-----------+----------------------+----------
+     1:<12 |     44.53      55.47 |    100.00 
+      2:12 |     45.16      54.84 |    100.00 
+   3:13-15 |     57.24      42.76 |    100.00 
+    4:>=16 |     41.82      58.18 |    100.00 
+-----------+----------------------+----------
+     Total |     47.48      52.52 |    100.00 
+
+.         
+. *ANSWER: College graduates are quite a bit more likely to 
+. *be matched with each other. High school dropouts are also
+. *somewhat more likely to share the same education.
+. 
+. 
+. **************
+. * QUESTION 7 *
+. **************
+.         
+. ***Save as temporary file
+. tempfile couples
+
+. save `couples'
+file /var/folders/dp/g5rw5dtd5sq4chdm2nf0ymqc0000gp/T//S_30006.000001 saved
+
+. 
+. 
+. **************
+. * QUESTION 8 *
+. **************
+. 
+. *Read in metropolitan area file
+. use conc_ssmale.dta
+
+. describe
+
+Contains data from conc_ssmale.dta
+  obs:            95                          
+ vars:             2                          6 Mar 2014 13:35
+-----------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------
+metarea         int     %43.0g     metarealbl
+                                              Metropolitan area [general version]
+cssex_male      float   %9.0g                 (mean) cssex_male
+-----------------------------------------------------------------------------------------------------
+Sorted by: metarea
+
+. 
+. *Make a 4 category variable based on quartiles
+. xtile conc_quart = cssex_male, nq(4)
+
+. 
+. *Check -- each quartile should contain roughly 25% of metro areas
+. tab conc_quart
+
+4 quantiles |
+         of |
+ cssex_male |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |         24       25.26       25.26
+          2 |         24       25.26       50.53
+          3 |         24       25.26       75.79
+          4 |         23       24.21      100.00
+------------+-----------------------------------
+      Total |         95      100.00
+
+. * Looks good
+. 
+. lab var conc_quart "Proportion of Couples in Same-Sex Male Relationships, Quartiles"
+
+. lab def quartiles 1 "1:<=25" 2 "2:26 to <=50" 3 "3:51 to <=75" 4 "4:76 to <= 100"
+
+. lab val conc_quart quartiles
+
+. 
+. tab conc_quart
+
+ Proportion of |
+    Couples in |
+ Same-Sex Male |
+Relationships, |
+     Quartiles |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+        1:<=25 |         24       25.26       25.26
+  2:26 to <=50 |         24       25.26       50.53
+  3:51 to <=75 |         24       25.26       75.79
+4:76 to <= 100 |         23       24.21      100.00
+---------------+-----------------------------------
+         Total |         95      100.00
+
+. 
+. *Look at a few cases
+. sort cssex_male
+
+. list in 1/10 // 10 metro areas with smallest proportion of couples in same-sed male relationships
+
+     +----------------------------------------------------------+
+     |                            metarea   cssex_~e   conc_q~t |
+     |----------------------------------------------------------|
+  1. |                         Canton, OH   .0002382     1:<=25 |
+  2. |           Youngstown-Warren, OH-PA   .0002842     1:<=25 |
+  3. |                    Bakersfield, CA   .0004034     1:<=25 |
+  4. | McAllen-Edinburg-Pharr-Mission, TX   .0004351     1:<=25 |
+  5. |  Not identifiable or not in an MSA   .0005931     1:<=25 |
+     |----------------------------------------------------------|
+  6. |                        Modesto, CA    .000657     1:<=25 |
+  7. |                        El Paso, TX   .0006703     1:<=25 |
+  8. |                      Lancaster, PA   .0007292     1:<=25 |
+  9. |        Albany-Schenectady-Troy, NY   .0007498     1:<=25 |
+ 10. |          Buffalo-Niagara Falls, NY    .000862     1:<=25 |
+     +----------------------------------------------------------+
+
+. list in -10/L // 10 metro areas with largest proportion of couples in same-sed male relationships
+
+     +-------------------------------------------------------------------------+
+     |                                     metarea   cssex_~e       conc_quart |
+     |-------------------------------------------------------------------------|
+ 86. |                                Sarasota, FL   .0031889   4:76 to <= 100 |
+ 87. |                        Washington, DC/MD/VA   .0032794   4:76 to <= 100 |
+ 88. |                               San Diego, CA    .003313   4:76 to <= 100 |
+ 89. |                             New Orleans, LA   .0033465   4:76 to <= 100 |
+ 90. |                                 Atlanta, GA   .0034913   4:76 to <= 100 |
+     |-------------------------------------------------------------------------|
+ 91. |                          Denver-Boulder, CO   .0035056   4:76 to <= 100 |
+ 92. |                                  Austin, TX   .0040643   4:76 to <= 100 |
+ 93. |                         Seattle-Everett, WA    .004404   4:76 to <= 100 |
+ 94. | Fort Lauderdale-Hollywood-Pompano Beach, FL    .005148   4:76 to <= 100 |
+ 95. |           San Francisco-Oakland-Vallejo, CA   .0063048   4:76 to <= 100 |
+     +-------------------------------------------------------------------------+
+
+.   
+.   
+. ***************
+. * QUESTION 9 *
+. **************
+. 
+. ***Perform the merge
+. merge 1:m metarea using `couples'
+(label metarealbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             2,437  (_merge==3)
+    -----------------------------------------
+
+.         
+. *Look at some cases to check
+. sort cssex_male serial
+
+. list metarea cssex_male conc_quart serial educ1 educ0 in 1/20
+
+     +---------------------------------------------------------------------------------------+
+     |                            metarea   cssex_~e   conc_q~t   serial     educ1     educ0 |
+     |---------------------------------------------------------------------------------------|
+  1. |                         Canton, OH   .0002382     1:<=25   476261      2:12    4:>=16 |
+  2. |                         Canton, OH   .0002382     1:<=25   476554      2:12      2:12 |
+  3. |                         Canton, OH   .0002382     1:<=25   477058    4:>=16   3:13-15 |
+  4. |           Youngstown-Warren, OH-PA   .0002842     1:<=25   472748      2:12   3:13-15 |
+  5. |                    Bakersfield, CA   .0004034     1:<=25   251389      2:12      2:12 |
+     |---------------------------------------------------------------------------------------|
+  6. | McAllen-Edinburg-Pharr-Mission, TX   .0004351     1:<=25   604077   3:13-15     1:<12 |
+  7. | McAllen-Edinburg-Pharr-Mission, TX   .0004351     1:<=25   604132     1:<12   3:13-15 |
+  8. | McAllen-Edinburg-Pharr-Mission, TX   .0004351     1:<=25   604555     1:<12      2:12 |
+  9. |  Not identifiable or not in an MSA   .0005931     1:<=25     3796      2:12      2:12 |
+ 10. |  Not identifiable or not in an MSA   .0005931     1:<=25     4389    4:>=16    4:>=16 |
+     |---------------------------------------------------------------------------------------|
+ 11. |  Not identifiable or not in an MSA   .0005931     1:<=25     6759   3:13-15      2:12 |
+ 12. |  Not identifiable or not in an MSA   .0005931     1:<=25     7646    4:>=16    4:>=16 |
+ 13. |  Not identifiable or not in an MSA   .0005931     1:<=25     7686    4:>=16    4:>=16 |
+ 14. |  Not identifiable or not in an MSA   .0005931     1:<=25     8562    4:>=16    4:>=16 |
+ 15. |  Not identifiable or not in an MSA   .0005931     1:<=25    15026   3:13-15      2:12 |
+     |---------------------------------------------------------------------------------------|
+ 16. |  Not identifiable or not in an MSA   .0005931     1:<=25    15243   3:13-15      2:12 |
+ 17. |  Not identifiable or not in an MSA   .0005931     1:<=25    15362      2:12   3:13-15 |
+ 18. |  Not identifiable or not in an MSA   .0005931     1:<=25    16354   3:13-15    4:>=16 |
+ 19. |  Not identifiable or not in an MSA   .0005931     1:<=25    17054    4:>=16      2:12 |
+ 20. |  Not identifiable or not in an MSA   .0005931     1:<=25    17185      2:12     1:<12 |
+     +---------------------------------------------------------------------------------------+
+
+.         
+. *Note that the values for cssex_male for Canton,OH match in the merge file
+. *and the original file. The merge worked.
+. 
+. 
+. **************
+. * QUESTION 10 *
+. **************
+.         
+. *Relationship between concentration and likelihood of sharing ed
+. tab conc_quart sameeduc, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+ Proportion of |
+    Couples in |
+ Same-Sex Male |
+Relationships, |       sameeduc
+     Quartiles |         0          1 |     Total
+---------------+----------------------+----------
+        1:<=25 |       485        483 |       968 
+               |     50.10      49.90 |    100.00 
+---------------+----------------------+----------
+  2:26 to <=50 |        63         93 |       156 
+               |     40.38      59.62 |    100.00 
+---------------+----------------------+----------
+  3:51 to <=75 |       178        172 |       350 
+               |     50.86      49.14 |    100.00 
+---------------+----------------------+----------
+4:76 to <= 100 |       431        532 |       963 
+               |     44.76      55.24 |    100.00 
+---------------+----------------------+----------
+         Total |     1,157      1,280 |     2,437 
+               |     47.48      52.52 |    100.00 
+
+.         
+. *I don't see much of an obvious relationship here. Couples in the 
+. *2nd quartile are the most likely to share the same educational
+. *attainment. Maybe there's something about these towns -- smaller 
+. *overall, or more homogenous overall?
+.         
+. log close
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exerci
+> ses/Do/Exercise_7.log
+  log type:  text
+ closed on:   6 Apr 2021, 16:11:13
+-----------------------------------------------------------------------------------------------------

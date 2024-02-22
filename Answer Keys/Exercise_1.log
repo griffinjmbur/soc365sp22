@@ -1,0 +1,199 @@
+---------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Do/Exercise_1.log
+  log type:  text
+ opened on:   8 Feb 2021, 18:53:58
+
+. 
+. *FILE:    Exercise_1.do
+. *PURPOSE: Sarah's Answer Key to Exercise 1
+. 
+. *Set working directory
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data
+
+. 
+. ////// STEP 1 ////////
+> *** make and save your do file.
+. 
+. ////// STEP 2 ////////
+> *** You can use type if you want to see the type of data you are working with
+. type gpa.csv, lines(10) // because we don't want super long outputs (they make our log files annoying)
+﻿id,female,term,sat,cumgpa,sport
+22,1,8808,920,2.25,tennis
+22,1,8901,920,2.04,tennis
+35,0,8808,780,2.03,baseball
+35,0,8901,780,2.09,baseball
+36,0,8808,810,0,baseball
+36,0,8901,810,1.78,baseball
+156,0,8808,1080,0,soccer
+156,0,8901,1080,2,soccer
+246,0,8808,960,2.35,wrestlin
+.                                                 // we can use the "lines()" option to limit the number of lines displayed.
+.                                                 // in this case, I have decided to display 10 lines.
+.                                                 // from looking at the output, I see the looks to be comma delimited.
+.                                                 
+. *** Reading/importing comma delimited data
+. insheet using gpa.csv,clear // could use "insheet"
+(6 vars, 732 obs)
+
+. import delimited gpa.csv,clear // could use "import delimited." I notice that that the id variable name is a little wonky.
+(6 vars, 732 obs)
+
+. import delimited gpa.csv , delimiters(",") clear // could try to specify the delimiter, but it still looks a bit wonky.
+(6 vars, 732 obs)
+
+. // I would probably go with insheet.
+. insheet using gpa.csv,clear 
+(6 vars, 732 obs)
+
+.         
+. *** to save the data as Stata data:
+. save gpa, replace // this will save a file "gpa.dta".
+file gpa.dta saved
+
+.                                 // I don't have to specify the file type as ".dta" because that's the default
+.                                 // note that this saves my new gpa.dta file to my working directory (the Original data folder)
+.                                 // if I want to save it somwhere else, I have to include the path location.
+.         save "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Modified data/gpa.dta
+> ", replace
+file /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Modified data/gpa.dta saved
+
+.         // this will save a copy in my "Modified data folder"
+.         // note that here I had to specify the file type as ".dta" because its all within quotations
+. 
+. *** describe the dataset
+. describe // I can see that there are 732 observations (rows) and 6 variables (columns)
+
+Contains data from /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Modified data/gpa.
+> dta
+  obs:           732                          
+ vars:             6                          8 Feb 2021 18:53
+---------------------------------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+---------------------------------------------------------------------------------------------------------------------------------
+id              long    %12.0g                ﻿id
+female          byte    %8.0g                 
+term            int     %8.0g                 
+sat             int     %8.0g                 
+cumgpa          float   %9.0g                 
+sport           str8    %9s                   
+---------------------------------------------------------------------------------------------------------------------------------
+Sorted by: 
+
+.                 // but am I sure there are actually 732 students?
+.                 // let's investigate! (if you didn't do this for the exercise, don't worry--I wasn't really expecting it)
+. 
+. *** let's list some of our data
+. list in 1/15 // note that I limit the output because I really don't want to list the whole dataset (732 rows!!!)
+
+     +------------------------------------------------+
+     |  id   female   term    sat   cumgpa      sport |
+     |------------------------------------------------|
+  1. |  22        1   8808    920     2.25     tennis |
+  2. |  22        1   8901    920     2.04     tennis |
+  3. |  35        0   8808    780     2.03   baseball |
+  4. |  35        0   8901    780     2.09   baseball |
+  5. |  36        0   8808    810        0   baseball |
+     |------------------------------------------------|
+  6. |  36        0   8901    810     1.78   baseball |
+  7. | 156        0   8808   1080        0     soccer |
+  8. | 156        0   8901   1080        2     soccer |
+  9. | 246        0   8808    960     2.35   wrestlin |
+ 10. | 246        0   8901    960     2.41   wrestlin |
+     |------------------------------------------------|
+ 11. | 264        0   8808    790        0     soccer |
+ 12. | 264        0   8901    790     1.16     soccer |
+ 13. | 326        1   8808    820     2.12      bball |
+ 14. | 326        1   8901    820     1.87      bball |
+ 15. | 410        0   8808    820     1.93     soccer |
+     +------------------------------------------------+
+
+.                         // Here, I'm listing the first 15 observations.
+.                         // This especially important when you start to work with larger datasets
+.                         // what do you notice in the output?
+.                         // I notice that it looks like each student appears twice in the dataset.
+.                         // I think this is the case because each id number occurs twice,
+.                         // once for term 8808 and once for term 8901.
+. 
+. *** let's confirm our hypohtesis about the duplicate id numbers
+. duplicates report id // this will give me a report about duplicates for just the variable "id"
+
+Duplicates in terms of id
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        2 |          732           366
+--------------------------------------
+
+.                                         // the output confirms my suspicion: each student is repeated twice
+.                                         // this means the number of students in my data is 366.
+. 
+.         // note the if you just checked for duplicates across *all* variables, you might think that
+.         // there were 732 unique students in the dataset:
+.         duplicates report
+
+Duplicates in terms of all variables
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        1 |          732             0
+--------------------------------------
+
+.         // this is because each row is, in fact, unique in that it is for a different term.
+.         // this is why there are no duplicated data when considering all variables.
+. 
+. ////// STEP 3 ////////
+> ** there are 366 unique students (732 observations because each student appears twice)
+. 
+. 
+. 
+. ////// STEP 4 ////////
+> tab female // the mini codebook included in the exercise instructions tells you that 1=female and 0= male
+
+     female |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        552       75.41       75.41
+          1 |        180       24.59      100.00
+------------+-----------------------------------
+      Total |        732      100.00
+
+. tab female, miss // might want to see if there is missing data. there isn't.
+
+     female |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        552       75.41       75.41
+          1 |        180       24.59      100.00
+------------+-----------------------------------
+      Total |        732      100.00
+
+. * 24.59% of the athletes in this dataset are female.
+. 
+. 
+. 
+. ////// STEP 5 ////////
+> summarize cumgpa
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      cumgpa |        732    2.080861    .9896168          0          4
+
+. sum cumgpa // can also just write "sum" for short
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      cumgpa |        732    2.080861    .9896168          0          4
+
+. 
+. * The average cumulative gpa of student athletes in this dataset is 2.08.
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Do/Exercise_1.log
+  log type:  text
+ closed on:   8 Feb 2021, 18:53:59
+---------------------------------------------------------------------------------------------------------------------------------

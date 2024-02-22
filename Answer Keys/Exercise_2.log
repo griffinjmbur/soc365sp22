@@ -1,0 +1,393 @@
+----------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/D
+> o/Exercise_2.log
+  log type:  text
+ opened on:  22 Feb 2021, 22:02:45
+
+. 
+. *FILE:    Exercise_2.do
+. *PURPOSE: Week 2 Exercise - Data Cleaning
+. 
+. *Set working directory
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original
+>  data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data
+
+. 
+. *Read in data
+. type gpa_errors.csv, lines(5) // comma delimited data
+id,female,term,math,verbal,cumgpa
+22,1,8808,620,300,2.25
+22,1,8901,620,300,2.04
+35,0,8808,430,350,2.03
+35,0,8901,430,350,2.09
+. 
+. insheet using gpa_errors.csv, clear
+(6 vars, 733 obs)
+
+. 
+. describe
+
+Contains data
+  obs:           733                          
+ vars:             6                          
+----------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+----------------------------------------------------------------------------------------------------------
+id              long    %12.0g                
+female          byte    %8.0g                 
+term            int     %8.0g                 
+math            int     %8.0g                 
+verbal          int     %8.0g                 
+cumgpa          float   %9.0g                 
+----------------------------------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. 
+. *Question 4: There are 733 observations in this data set.
+. 
+. duplicates report
+
+Duplicates in terms of all variables
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        1 |          731             0
+        2 |            2             1
+--------------------------------------
+
+. 
+. *Question 5/6: It looks like there is 1 duplicate record 
+. *            (2 observations that are identical)
+. 
+. *Question 7: tag duplicate cases
+. duplicates tag, gen(dup)
+
+Duplicates in terms of all variables
+
+. 
+. list if dup == 1
+
+     +----------------------------------------------------+
+     |  id   female   term   math   verbal   cumgpa   dup |
+     |----------------------------------------------------|
+ 19. | 428        0   8808    409      321     1.97     1 |
+ 20. | 428        0   8808    409      321     1.97     1 |
+     +----------------------------------------------------+
+
+. *Question 7 continued: Yes, it looks like we did catch a duplicate
+. 
+. *Question 8: drop duplicates and check
+. duplicates drop
+
+Duplicates in terms of all variables
+
+(1 observation deleted)
+
+. list if dup == 1
+
+     +----------------------------------------------------+
+     |  id   female   term   math   verbal   cumgpa   dup |
+     |----------------------------------------------------|
+ 19. | 428        0   8808    409      321     1.97     1 |
+     +----------------------------------------------------+
+
+. 
+. describe
+
+Contains data
+  obs:           732                          
+ vars:             7                          
+----------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+----------------------------------------------------------------------------------------------------------
+id              long    %12.0g                
+female          byte    %8.0g                 
+term            int     %8.0g                 
+math            int     %8.0g                 
+verbal          int     %8.0g                 
+cumgpa          float   %9.0g                 
+dup             byte    %12.0g                
+----------------------------------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. *Question 8 continued: There are now 732 observations in the file
+. 
+. *Question 9: compute mean SAT scores in the "naive" way.
+. *            I see problems with very high values, which are probably
+. *            missings.
+. summarize verbal, detail
+
+                           verbal
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          201            200
+ 5%          271            200
+10%          300            200       Obs                 732
+25%          361            200       Sum of Wgt.         732
+
+50%          411                      Mean           488.9918
+                        Largest       Std. Dev.      868.9946
+75%          470           9999
+90%          520           9999       Variance       755151.6
+95%          550           9999       Skewness       10.76198
+99%          650           9999       Kurtosis       117.8924
+
+. summarize math, detail
+
+                            math
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          270            219
+ 5%          320            219
+10%          359            249       Obs                 732
+25%          419            249       Sum of Wgt.         732
+
+50%          489                      Mean           565.7732
+                        Largest       Std. Dev.      864.1989
+75%          569           9999
+90%          629           9999       Variance       746839.7
+95%          669           9999       Skewness       10.67807
+99%          780           9999       Kurtosis       116.6859
+
+. 
+. * Check to see if there are other values above 800.
+. tab verbal if verbal > 800
+
+     verbal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       9999 |          6      100.00      100.00
+------------+-----------------------------------
+      Total |          6      100.00
+
+. tab math if math > 800
+
+       math |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       9999 |          6      100.00      100.00
+------------+-----------------------------------
+      Total |          6      100.00
+
+. 
+. 
+. *Question 10: The issue with both of these variables are the 9999s. 
+. *             These are most likely missing values.
+. *             I will set these values to "." and re-estimate
+. 
+. gen verbal2 = verbal
+
+. replace verbal2 = . if verbal == 9999
+(6 real changes made, 6 to missing)
+
+. 
+. gen math2 = math
+
+. replace math2 = . if math == 9999
+(6 real changes made, 6 to missing)
+
+. 
+. *Check creation of new variables -- it worked 9999s have been coded to .
+. tab math math2 if math > 750, miss
+
+           |         math2
+      math |       780          . |     Total
+-----------+----------------------+----------
+       780 |         2          0 |         2 
+      9999 |         0          6 |         6 
+-----------+----------------------+----------
+     Total |         2          6 |         8 
+
+. tab verbal verbal2 if verbal > 750, miss
+
+           |  verbal2
+    verbal |         . |     Total
+-----------+-----------+----------
+      9999 |         6 |         6 
+-----------+-----------+----------
+     Total |         6 |         6 
+
+. 
+. *Question 11: Reestimate mean SAT scores.
+. summarize verbal2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     verbal2 |        726    410.3967    82.12416        200        650
+
+. summarize math2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       math2 |        726    487.8127     102.471        219        780
+
+. 
+. *Interpretation: The mean verbal SAT score for student athletes is 410 
+. *and the mean math score is 488.
+. 
+. *Question 12: Estimate means by gender.
+. bysort female: summarize verbal2
+
+----------------------------------------------------------------------------------------------------------
+-> female = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     verbal2 |        548    405.0876    82.86201        200        650
+
+----------------------------------------------------------------------------------------------------------
+-> female = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     verbal2 |        178    426.7416    77.78393        210        641
+
+
+. bysort female: summarize math2
+
+----------------------------------------------------------------------------------------------------------
+-> female = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       math2 |        550    487.4036    105.4314        219        780
+
+----------------------------------------------------------------------------------------------------------
+-> female = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       math2 |        176    489.0909    92.88317        280        709
+
+
+. 
+. *Female athletes are getting somewhat higher verbal scores and basically
+. *the same math scores as male athletes.
+. 
+. *Question 13: Check cumgpa variable
+. summarize cumgpa, detail
+
+                           cumgpa
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs                 732
+25%         1.87              0       Sum of Wgt.         732
+
+50%         2.17                      Mean           2.138402
+                        Largest       Std. Dev.      1.525406
+75%         2.67              4
+90%         3.25              4       Variance       2.326865
+95%          3.5           17.1       Skewness       9.102003
+99%            4           29.7       Kurtosis       159.3108
+
+. 
+. 
+. *There are two gpa values that are out of range, 17.1 and 29.7.
+. *We don't know what they actually are so change them to missing
+. *values.
+. 
+. gen cumgpa2 = cumgpa
+
+. replace cumgpa2 = . if cumgpa > 4
+(2 real changes made, 2 to missing)
+
+. 
+. *check -- it worked
+. list cumgpa2 cumgpa if cumgpa > 4
+
+     +------------------+
+     | cumgpa2   cumgpa |
+     |------------------|
+ 70. |       .     29.7 |
+168. |       .     17.1 |
+     +------------------+
+
+. 
+. summarize cumgpa2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     cumgpa2 |        730    2.080151    .9903305          0          4
+
+. 
+. *The cumulative gpa after we've recoded these high values is 2.08 whereas
+. *before it was 2.14.
+. 
+. *Another potnetial reason why these values might be out of range
+. *is if the decimal places are in the wrong place. Divide by 10
+. *for these cases to see how much of a difference this makes.
+. 
+. gen cumgpa3 = cumgpa
+
+. replace cumgpa3 = cumgpa/10 if cumgpa > 4
+(2 real changes made)
+
+. 
+. *Check -- it worked
+. list cumgpa3 cumgpa if cumgpa > 4
+
+     +------------------+
+     | cumgpa3   cumgpa |
+     |------------------|
+ 70. |    2.97     29.7 |
+168. |    1.71     17.1 |
+     +------------------+
+
+. 
+. summarize cumgpa3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     cumgpa3 |        732    2.080861    .9896168          0          4
+
+. 
+. *The cumulative gpa after we've recoded these high values is 2.08 whereas
+. *before it was 2.14.
+. *
+. *This is the same result when we replaced the values with missings, 
+. *demonstrating that the results are robust to different ways of handling
+. *these outliers.
+. 
+. *There's also potentially an issue with the 0s. look at low values
+. tab cumgpa if cumgpa < 1
+
+     cumgpa |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         98       96.08       96.08
+         .6 |          1        0.98       97.06
+        .76 |          1        0.98       98.04
+        .92 |          1        0.98       99.02
+        .94 |          1        0.98      100.00
+------------+-----------------------------------
+      Total |        102      100.00
+
+. 
+. *13 percent of people have a 0 cumulative gpa. Did they really get all "F"s
+. *for their entire career? How does it change the results if we 
+. *exclude these people as well?
+. 
+. summarize cumgpa2 if cumgpa2 > 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     cumgpa2 |        632    2.402706    .5973622         .6          4
+
+. summarize cumgpa3 if cumgpa2 > 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     cumgpa3 |        634    2.402508    .5974785         .6          4
+
+. 
+. *It rises from 2.08 to 2.4 using the first recoded version of cumgpa 
+. *(where the high outliers were recoded as missing) and about the same
+. *for the other version, both quite substantial shifts.
+. 
+. capture log close

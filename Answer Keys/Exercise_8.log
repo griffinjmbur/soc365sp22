@@ -1,0 +1,989 @@
+-------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Do/Exercise_8.log
+  log type:  text
+ opened on:  25 Feb 2021, 22:23:26
+
+. 
+. *FILE:    Exercise_8.do
+. *PURPOSE: Answer key to Exercise 8
+. 
+. 
+. *This should be the path to your Original data folder, where you have saved the raw data file you just created.
+. cd "/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data"
+/Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Original data
+
+. 
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. 
+. * PART 1
+. 
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. 
+. use hsb.dta, clear
+
+. describe
+
+Contains data from hsb.dta
+  obs:        58,270                          
+ vars:            11                          31 Oct 2012 19:05
+                                              (_dta has notes)
+-------------------------------------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------------------------------------------------------------
+schoolid        int     %8.0g                 FOUR DIGIT SCHOOL ID
+studntid        byte    %8.0g                 TWO DIGIT STUDENT ID
+caseid          long    %12.0g                UNIQUE CASE IDENTIFIER FOR STUDENT
+grade           byte    %8.0g      GRADE      GRADE LEVEL
+BB015           byte    %8.0g      BB015      TIME ON HOMEWORK PER WEEK
+BB039           byte    %8.0g      BB039      FATHERS EDUCATION
+BB046B          byte    %8.0g      LABV       FATHER MONITORS SCHOOL WORK
+BB065           byte    %8.0g      LABAN      SCHOOLING YOU THINK YOU WILL GET
+BB083           byte    %8.0g      BB083      sex
+BB089           byte    %8.0g      BB089      race
+bbmathfs        double  %10.0g                BOTH MATH FORMULA SCORE
+-------------------------------------------------------------------------------------------------------------------------------------
+Sorted by: 
+
+. 
+. *Add numbers to value labels
+. numlabel, add
+
+. 
+. **************
+. * QUESTION 2 *
+. **************
+. 
+. *2A) - is father's education related to homework monitoring?
+. 
+.         *First look at the variables
+.         tab BB039, miss
+
+      FATHERS EDUCATION |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+ 1. NO LIVE WITH FATHER |      4,541        7.79        7.79
+      2. LT HIGH SCHOOL |     10,231       17.56       25.35
+       3. HS GRADUATION |     13,037       22.37       47.72
+      4. VOC LT 2 YEARS |      1,544        2.65       50.37
+       5. VOC 2 OR MORE |      2,502        4.29       54.67
+      6. COL LT 2 YEARS |      2,557        4.39       59.06
+   7. COL 2 YRS OR MORE |      2,648        4.54       63.60
+  8. COL FINISH 4-5 YRS |      5,137        8.82       72.42
+      9. MASTERS DEGREE |      2,722        4.67       77.09
+10. PHD-MD ADVAN DEGREE |      1,978        3.39       80.48
+                 11. dk |      8,053       13.82       94.30
+                      . |      3,320        5.70      100.00
+------------------------+-----------------------------------
+                  Total |     58,270      100.00
+
+.         tab BB046B, miss
+
+     FATHER |
+   MONITORS |
+SCHOOL WORK |      Freq.     Percent        Cum.
+------------+-----------------------------------
+    1. true |     38,682       66.38       66.38
+   2. false |     11,965       20.53       86.92
+      3. na |      5,746        9.86       96.78
+          . |      1,877        3.22      100.00
+------------+-----------------------------------
+      Total |     58,270      100.00
+
+.         
+.         
+.         *Change na's, dk's, and no fathers to missing. You can just set to . like this:
+.         *recode BB039 11=. 1=., gen(fed)
+.         *recode BB046B 3= ., gen(monitor)
+.         
+.         *OR you can set to specific kinds of missing and label them.
+.         *This is probably not necessary for this assignment, but I wanted to give it
+.         *to you in a do file so you can have it for reference!
+.         recode BB039 11=.d 1=.n, gen(fed)
+(12594 differences between BB039 and fed)
+
+.         recode BB046B 3= .n, gen(monitor)
+(5746 differences between BB046B and monitor)
+
+.         
+.         *we can copy the original value labels and add categories:
+.         label copy BB039 fed_label
+
+.         label define fed_label .d "Don't Know" .n "NA", add
+
+.         label list fed_label
+fed_label:
+           1 1. NO LIVE WITH FATHER
+           2 2. LT HIGH SCHOOL
+           3 3. HS GRADUATION
+           4 4. VOC LT 2 YEARS
+           5 5. VOC 2 OR MORE
+           6 6. COL LT 2 YEARS
+           7 7. COL 2 YRS OR MORE
+           8 8. COL FINISH 4-5 YRS
+           9 9. MASTERS DEGREE
+          10 10. PHD-MD ADVAN DEGREE
+          11 11. dk
+          .d Don't Know
+          .n NA
+
+.         label values fed fed_label
+
+.         tab fed, miss
+
+        RECODE of BB039 |
+    (FATHERS EDUCATION) |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+      2. LT HIGH SCHOOL |     10,231       17.56       17.56
+       3. HS GRADUATION |     13,037       22.37       39.93
+      4. VOC LT 2 YEARS |      1,544        2.65       42.58
+       5. VOC 2 OR MORE |      2,502        4.29       46.87
+      6. COL LT 2 YEARS |      2,557        4.39       51.26
+   7. COL 2 YRS OR MORE |      2,648        4.54       55.81
+  8. COL FINISH 4-5 YRS |      5,137        8.82       64.62
+      9. MASTERS DEGREE |      2,722        4.67       69.29
+10. PHD-MD ADVAN DEGREE |      1,978        3.39       72.69
+                      . |      3,320        5.70       78.39
+             Don't Know |      8,053       13.82       92.21
+                     NA |      4,541        7.79      100.00
+------------------------+-----------------------------------
+                  Total |     58,270      100.00
+
+.         
+.         lab copy LABV monitor_lab
+
+.         lab def monitor_lab .n "NA", add
+
+.         lab list monitor_lab
+monitor_lab:
+           1 1. true
+           2 2. false
+           3 3. na
+          .n NA
+
+.         lab val monitor monitor_lab
+
+.         tab monitor, m
+
+  RECODE of |
+     BB046B |
+    (FATHER |
+   MONITORS |
+     SCHOOL |
+      WORK) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+    1. true |     38,682       66.38       66.38
+   2. false |     11,965       20.53       86.92
+          . |      1,877        3.22       90.14
+         NA |      5,746        9.86      100.00
+------------+-----------------------------------
+      Total |     58,270      100.00
+
+.         
+.         *Check
+.         tab BB039 fed, miss
+
+                      |                           RECODE of BB039 (FATHERS EDUCATION)
+    FATHERS EDUCATION | 2. LT HIG  3. HS GRA  4. VOC LT  5. VOC 2   6. COL LT  7. COL 2   8. COL FI  9. MASTER |     Total
+----------------------+----------------------------------------------------------------------------------------+----------
+1. NO LIVE WITH FATHE |         0          0          0          0          0          0          0          0 |     4,541 
+    2. LT HIGH SCHOOL |    10,231          0          0          0          0          0          0          0 |    10,231 
+     3. HS GRADUATION |         0     13,037          0          0          0          0          0          0 |    13,037 
+    4. VOC LT 2 YEARS |         0          0      1,544          0          0          0          0          0 |     1,544 
+     5. VOC 2 OR MORE |         0          0          0      2,502          0          0          0          0 |     2,502 
+    6. COL LT 2 YEARS |         0          0          0          0      2,557          0          0          0 |     2,557 
+ 7. COL 2 YRS OR MORE |         0          0          0          0          0      2,648          0          0 |     2,648 
+8. COL FINISH 4-5 YRS |         0          0          0          0          0          0      5,137          0 |     5,137 
+    9. MASTERS DEGREE |         0          0          0          0          0          0          0      2,722 |     2,722 
+10. PHD-MD ADVAN DEGR |         0          0          0          0          0          0          0          0 |     1,978 
+               11. dk |         0          0          0          0          0          0          0          0 |     8,053 
+                    . |         0          0          0          0          0          0          0          0 |     3,320 
+----------------------+----------------------------------------------------------------------------------------+----------
+                Total |    10,231     13,037      1,544      2,502      2,557      2,648      5,137      2,722 |    58,270 
+
+
+                      |     RECODE of BB039 (FATHERS EDUCATION)
+    FATHERS EDUCATION | 10. PHD-M          .  Don't Kno         NA |     Total
+----------------------+--------------------------------------------+----------
+1. NO LIVE WITH FATHE |         0          0          0      4,541 |     4,541 
+    2. LT HIGH SCHOOL |         0          0          0          0 |    10,231 
+     3. HS GRADUATION |         0          0          0          0 |    13,037 
+    4. VOC LT 2 YEARS |         0          0          0          0 |     1,544 
+     5. VOC 2 OR MORE |         0          0          0          0 |     2,502 
+    6. COL LT 2 YEARS |         0          0          0          0 |     2,557 
+ 7. COL 2 YRS OR MORE |         0          0          0          0 |     2,648 
+8. COL FINISH 4-5 YRS |         0          0          0          0 |     5,137 
+    9. MASTERS DEGREE |         0          0          0          0 |     2,722 
+10. PHD-MD ADVAN DEGR |     1,978          0          0          0 |     1,978 
+               11. dk |         0          0      8,053          0 |     8,053 
+                    . |         0      3,320          0          0 |     3,320 
+----------------------+--------------------------------------------+----------
+                Total |     1,978      3,320      8,053      4,541 |    58,270 
+
+.         tab BB046B monitor, miss
+
+    FATHER |
+  MONITORS |  RECODE of BB046B (FATHER MONITORS SCHOOL
+    SCHOOL |                    WORK)
+      WORK |   1. true   2. false          .         NA |     Total
+-----------+--------------------------------------------+----------
+   1. true |    38,682          0          0          0 |    38,682 
+  2. false |         0     11,965          0          0 |    11,965 
+     3. na |         0          0          0      5,746 |     5,746 
+         . |         0          0      1,877          0 |     1,877 
+-----------+--------------------------------------------+----------
+     Total |    38,682     11,965      1,877      5,746 |    58,270 
+
+. 
+.         
+. tab fed monitor, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+                      |   RECODE of BB046B
+                      |   (FATHER MONITORS
+      RECODE of BB039 |     SCHOOL WORK)
+  (FATHERS EDUCATION) |   1. true   2. false |     Total
+----------------------+----------------------+----------
+    2. LT HIGH SCHOOL |     6,438      3,011 |     9,449 
+                      |     68.13      31.87 |    100.00 
+----------------------+----------------------+----------
+     3. HS GRADUATION |     9,469      2,735 |    12,204 
+                      |     77.59      22.41 |    100.00 
+----------------------+----------------------+----------
+    4. VOC LT 2 YEARS |     1,147        306 |     1,453 
+                      |     78.94      21.06 |    100.00 
+----------------------+----------------------+----------
+     5. VOC 2 OR MORE |     1,941        423 |     2,364 
+                      |     82.11      17.89 |    100.00 
+----------------------+----------------------+----------
+    6. COL LT 2 YEARS |     2,034        409 |     2,443 
+                      |     83.26      16.74 |    100.00 
+----------------------+----------------------+----------
+ 7. COL 2 YRS OR MORE |     2,111        408 |     2,519 
+                      |     83.80      16.20 |    100.00 
+----------------------+----------------------+----------
+8. COL FINISH 4-5 YRS |     4,266        629 |     4,895 
+                      |     87.15      12.85 |    100.00 
+----------------------+----------------------+----------
+    9. MASTERS DEGREE |     2,339        293 |     2,632 
+                      |     88.87      11.13 |    100.00 
+----------------------+----------------------+----------
+10. PHD-MD ADVAN DEGR |     1,664        228 |     1,892 
+                      |     87.95      12.05 |    100.00 
+----------------------+----------------------+----------
+                Total |    31,409      8,442 |    39,851 
+                      |     78.82      21.18 |    100.00 
+
+. 
+. *ANSWER: we see that the proportion reporting that fathers do monitor 
+. *homework is higher for those with more highly educated fathers. You could
+. *have also tested whether this relationship was significant with a chisquare
+. *test. The code would be:
+. *    tab fed monitor, row chi2
+. 
+. 
+. *2B) Is student's test score related to whether father monitors homework or not?
+. 
+. tab monitor, sum(bbmathfs)
+
+  RECODE of |
+     BB046B |
+    (FATHER |
+   MONITORS |
+     SCHOOL | Summary of BOTH MATH FORMULA SCORE
+      WORK) |        Mean   Std. Dev.       Freq.
+------------+------------------------------------
+    1. true |    7.994384   5.5257819      35,039
+   2. false |   6.7179977   5.4149763      10,728
+------------+------------------------------------
+      Total |   7.6951931   5.5264659      45,767
+
+. 
+. *On average, students whose fathers monitor their homework scored about one 
+. *point higher on the math test than students whose fathers do not monitor 
+. *homework.
+. 
+. *Whether or not this is a significant difference (either in substantive or 
+. *statistical terms) is an importnat question that you would probably want 
+. *to pursue using techniques like t-test or simple bivariate regression
+. 
+. *You could look at this with a t-test as follows:
+. ttest bbmathfs, by(monitor) unequal
+
+Two-sample t test with unequal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+ 1. true |  35,039    7.994384    .0295201    5.525782    7.936524    8.052244
+2. false |  10,728    6.717998    .0522802    5.414976    6.615519    6.820477
+---------+--------------------------------------------------------------------
+combined |  45,767    7.695193    .0258328    5.526466     7.64456    7.745826
+---------+--------------------------------------------------------------------
+    diff |            1.276386    .0600388                1.158705    1.394068
+------------------------------------------------------------------------------
+    diff = mean(1. true) - mean(2. false)                         t =  21.2594
+Ho: diff = 0                     Satterthwaite's degrees of freedom =  18094.5
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+. 
+. *The ttest shows that this difference is significant at p<.01.
+. 
+. 
+. *2C) Is school level test score associated with the proportion of fathers 
+. *who monitor homework?
+. 
+. *first create school mean value of the math test sore
+. bysort schoolid: egen mmath=mean(bbmathfs)
+(1,174 missing values generated)
+
+. 
+. *Next, to create school-specific proportion of fathers who monitor 
+. *children's homework it is useful to first create a 0-1 indicator of monitoring.
+. *The simple reason is that the mean value of a 0-1 variable is the proportion 
+. *with a value of 1 (i.e., the proportion of fathers who monitor children's 
+. *homework in this case)
+. 
+. *recode monitor from 1/2 variable to 0/1 variable
+. *first drop original variable 
+. drop monitor
+
+. gen monitor=(BB046B==1)
+
+. replace monitor = . if BB046B == . | BB046B == 3
+(7,623 real changes made, 7,623 to missing)
+
+. 
+. 
+. label define yn 0 "0:No" 1 "1:Yes"
+
+. label values monitor yn
+
+. 
+. *tabulate new and original variables to confirm that recode is as you intended
+. tab BB046B monitor, miss
+
+    FATHER |
+  MONITORS |
+    SCHOOL |             monitor
+      WORK |      0:No      1:Yes          . |     Total
+-----------+---------------------------------+----------
+   1. true |         0     38,682          0 |    38,682 
+  2. false |    11,965          0          0 |    11,965 
+     3. na |         0          0      5,746 |     5,746 
+         . |         0          0      1,877 |     1,877 
+-----------+---------------------------------+----------
+     Total |    11,965     38,682      7,623 |    58,270 
+
+. *looks good
+. 
+. bysort schoolid: egen mmonitor=mean(monitor)
+
+. 
+. 
+. *To answer this question, I will just look at the correlation coefficient - 
+. *is the average test score positively/negatively associated with the 
+. *proportion of fathers in the school who monitor children's homework?;
+. 
+. corr mmonitor mmath
+(obs=57,096)
+
+             | mmonitor    mmath
+-------------+------------------
+    mmonitor |   1.0000
+       mmath |   0.4202   1.0000
+
+
+. 
+. /*ANSWER: Clearly, and perhaps not surprisingly, the correlation is positive 
+> *and of moderate size.
+> 
+> *You could have used techniques other than correlation - e.g., regression:
+> 
+> regress mmath mmonitor
+> 
+> */
+. 
+. 
+. **************
+. * QUESTION 3 *
+. **************
+. 
+. *3A-3B) Now let's turn to the question on the test score gap;
+. *first drop all students with missing values on the math test score - 
+. *They will not contribute to the calcluation and could actually cause some 
+. *difficulties (i.e., because Stata treats missing as the largest value)
+. count if bbmathfs==.
+  6,163
+
+. drop if bbmathfs==.
+(6,163 observations deleted)
+
+. count if bbmathfs==.
+  0
+
+. 
+. *Within each school generate a variable that is equal the score of the 
+. *student who got the highest score and lowest score
+. by schoolid: egen himath=max(bbmathfs)
+
+. by schoolid: egen lomath=min(bbmathfs)
+
+. 
+. *create measure of the gap in test scores
+. by schoolid: gen difmath=himath-lomath
+
+. 
+. *check
+. list schoolid difmath himath lomath bbmathfs in 1/20
+
+     +-------------------------------------------------+
+     | schoolid   difmath   himath   lomath   bbmathfs |
+     |-------------------------------------------------|
+  1. |     1032    11.667    8.667       -3          2 |
+  2. |     1032    11.667    8.667       -3          2 |
+  3. |     1032    11.667    8.667       -3      3.333 |
+  4. |     1032    11.667    8.667       -3      7.667 |
+  5. |     1032    11.667    8.667       -3      3.333 |
+     |-------------------------------------------------|
+  6. |     1032    11.667    8.667       -3      -.667 |
+  7. |     1032    11.667    8.667       -3          2 |
+  8. |     1032    11.667    8.667       -3      -.667 |
+  9. |     1032    11.667    8.667       -3         -2 |
+ 10. |     1032    11.667    8.667       -3      3.333 |
+     |-------------------------------------------------|
+ 11. |     1032    11.667    8.667       -3      3.333 |
+ 12. |     1032    11.667    8.667       -3       .667 |
+ 13. |     1032    11.667    8.667       -3         -2 |
+ 14. |     1032    11.667    8.667       -3     -1.667 |
+ 15. |     1032    11.667    8.667       -3      8.667 |
+     |-------------------------------------------------|
+ 16. |     1032    11.667    8.667       -3      7.333 |
+ 17. |     1032    11.667    8.667       -3       .667 |
+ 18. |     1032    11.667    8.667       -3      2.333 |
+ 19. |     1032    11.667    8.667       -3      -.333 |
+ 20. |     1032    11.667    8.667       -3       .667 |
+     +-------------------------------------------------+
+
+. list schoolid difmath himath lomath bbmathfs in 301/320
+
+     +-------------------------------------------------+
+     | schoolid   difmath   himath   lomath   bbmathfs |
+     |-------------------------------------------------|
+301. |     1095    17.333   15.333       -2          2 |
+302. |     1095    17.333   15.333       -2     11.667 |
+303. |     1095    17.333   15.333       -2       .667 |
+304. |     1095    17.333   15.333       -2     15.333 |
+305. |     1095    17.333   15.333       -2          9 |
+     |-------------------------------------------------|
+306. |     1095    17.333   15.333       -2      4.667 |
+307. |     1095    17.333   15.333       -2         -2 |
+308. |     1095    17.333   15.333       -2     10.333 |
+309. |     1095    17.333   15.333       -2       .667 |
+310. |     1098    21.333       18   -3.333      4.667 |
+     |-------------------------------------------------|
+311. |     1098    21.333       18   -3.333      8.667 |
+312. |     1098    21.333       18   -3.333      -.667 |
+313. |     1098    21.333       18   -3.333     15.333 |
+314. |     1098    21.333       18   -3.333     11.333 |
+315. |     1098    21.333       18   -3.333     11.333 |
+     |-------------------------------------------------|
+316. |     1098    21.333       18   -3.333      6.333 |
+317. |     1098    21.333       18   -3.333          5 |
+318. |     1098    21.333       18   -3.333      2.333 |
+319. |     1098    21.333       18   -3.333     16.667 |
+320. |     1098    21.333       18   -3.333      3.333 |
+     +-------------------------------------------------+
+
+. *looks good
+. 
+. 
+. *summarize this new variable;
+. sum difmath
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     difmath |     52,107    19.34591    2.213823      1.333         24
+
+. 
+. *ANSWER: We see from this that the largest difference is 24 and the smallest difference
+. *is 1.33
+. 
+. *3C) Is the student's race associated with the size of the test score gap in 
+. *the school they attend?
+. *Simple comparison of mean values of the gap score across racial/ethnic 
+. *categories
+. 
+. tab BB089, sum(difmath)
+
+            |         Summary of difmath
+       race |        Mean   Std. Dev.       Freq.
+------------+------------------------------------
+   1. black |   18.720621   2.7028961       6,992
+   2. white |   19.447682   2.0815416      39,901
+  3. AMER I |   19.406027   2.2079328         555
+  4. ASIAN, |   19.541025   2.2759292         631
+   5. other |   19.516195    2.221596       3,182
+------------+------------------------------------
+      Total |   19.353462   2.2034599      51,261
+
+. *ANSWER: Not much difference apparent - black students appear to attend schools that, 
+. *on average, have a slightly lower gap in test scores but the differences is 
+. *not that large
+. 
+. 
+. 
+. 
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. 
+. * PART 2
+. 
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+. 
+. 
+. 
+. use nlsy_excerpt_79_81.dta, clear
+
+. describe
+
+Contains data from nlsy_excerpt_79_81.dta
+  obs:        33,354                          
+ vars:             9                          29 Mar 2019 14:16
+-------------------------------------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------------------------------------------------------------
+id              float   %9.0g                 ID# (1-12686) 79
+MARTLD          float   %16.0g     martld     Marital status
+year            int     %9.0g                 
+redu            float   %9.0g                 Rs edu (cont)
+pedu            float   %9.0g                 Spouse/partner's edu (cont)
+reduc           float   %9.0g                 Rs edu (5 cat)
+SAMPLEID        float   %9.0g                 SAMPLE ID 79 INT
+rsex            float   %15.0g     sex        SEX OF R 79
+peduc           float   %9.0g                 Spouse/partner's edu (5 cat)
+-------------------------------------------------------------------------------------------------------------------------------------
+Sorted by: id  year
+
+. 
+. **************
+. * QUESTION 4 *
+. **************
+. 
+. *tabulate value of redu
+. tab redu, miss
+
+     Rs edu |
+     (cont) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         16        0.05        0.05
+          1 |          9        0.03        0.07
+          2 |          2        0.01        0.08
+          3 |         52        0.16        0.24
+          4 |         50        0.15        0.39
+          5 |         68        0.20        0.59
+          6 |        245        0.73        1.33
+          7 |        787        2.36        3.68
+          8 |      2,757        8.27       11.95
+          9 |      4,492       13.47       25.42
+         10 |      5,282       15.84       41.25
+         11 |      4,649       13.94       55.19
+         12 |      9,441       28.31       83.50
+         13 |      2,263        6.78       90.28
+         14 |      1,616        4.84       95.13
+         15 |        965        2.89       98.02
+         16 |        594        1.78       99.80
+         17 |         42        0.13       99.93
+         18 |          4        0.01       99.94
+         19 |          2        0.01       99.95
+          . |         18        0.05      100.00
+------------+-----------------------------------
+      Total |     33,354      100.00
+
+. 
+. sort id year
+
+. by id: gen edchange = redu[_N]-redu[1]
+(44 missing values generated)
+
+. 
+. *check to see what values this new variable takes
+. tab edchange, miss
+
+   edchange |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         -1 |          2        0.01        0.01
+          0 |     11,676       35.01       35.01
+          1 |      6,898       20.68       55.69
+          2 |     13,770       41.28       96.98
+          3 |        805        2.41       99.39
+          4 |        102        0.31       99.70
+          5 |         12        0.04       99.73
+          6 |         21        0.06       99.80
+          7 |          9        0.03       99.82
+          8 |          9        0.03       99.85
+         10 |          6        0.02       99.87
+          . |         44        0.13      100.00
+------------+-----------------------------------
+      Total |     33,354      100.00
+
+. 
+. *There are a couple of cases where people's education goes down
+. *Investigate these
+. 
+. list id year redu if edchange < 0
+
+       +--------------------+
+       |   id   year   redu |
+       |--------------------|
+23513. | 8032     79     14 |
+23514. | 8032     81     13 |
+       +--------------------+
+
+. list id year redu edchange if id == 8032
+
+       +-------------------------------+
+       |   id   year   redu   edchange |
+       |-------------------------------|
+23513. | 8032     79     14         -1 |
+23514. | 8032     81     13         -1 |
+       +-------------------------------+
+
+. 
+. *This person reported that their education went down which is not possible. Replace
+. *with missing values
+. 
+. replace edchange = . if edchange < 0
+(2 real changes made, 2 to missing)
+
+. 
+. *Check variable creation
+. list id year edchange redu in 1/30
+
+     +-----------------------------+
+     | id   year   edchange   redu |
+     |-----------------------------|
+  1. |  1     79          0     12 |
+  2. |  1     81          0     12 |
+  3. |  2     79          0      9 |
+  4. |  2     80          0      9 |
+  5. |  2     81          0      9 |
+     |-----------------------------|
+  6. |  3     79          0     10 |
+  7. |  3     80          0     10 |
+  8. |  4     79          0      9 |
+  9. |  4     81          0      9 |
+ 10. |  5     79          2     13 |
+     |-----------------------------|
+ 11. |  5     80          2     14 |
+ 12. |  5     81          2     15 |
+ 13. |  6     79          2     12 |
+ 14. |  6     80          2     13 |
+ 15. |  6     81          2     14 |
+     |-----------------------------|
+ 16. |  7     79          2      8 |
+ 17. |  7     80          2      9 |
+ 18. |  7     81          2     10 |
+ 19. |  8     79          0     12 |
+ 20. |  8     80          0     12 |
+     |-----------------------------|
+ 21. |  8     81          0     12 |
+ 22. |  9     79          2      9 |
+ 23. |  9     80          2     10 |
+ 24. |  9     81          2     11 |
+ 25. | 10     79          0      9 |
+     |-----------------------------|
+ 26. | 10     80          0      9 |
+ 27. | 10     81          0      9 |
+ 28. | 11     79          2     13 |
+ 29. | 11     81          2     15 |
+ 30. | 12     79          2     13 |
+     +-----------------------------+
+
+. 
+. *Check missing values, when the first or last case is missing, ed change 
+. *is also missing. That's fine, although we could change the code so that we
+. *use the last non-missing value.
+. list id year edchange redu if edchange == . in 1/1000
+
+      +------------------------------+
+      |  id   year   edchange   redu |
+      |------------------------------|
+ 974. | 342     79          .      9 |
+ 975. | 342     80          .     10 |
+ 976. | 342     81          .      . |
+ 992. | 348     79          .     12 |
+ 993. | 348     80          .     12 |
+      |------------------------------|
+ 994. | 348     81          .      . |
+      +------------------------------+
+
+. 
+. *Finally, I'm not sure if it will matter that not all respondents stayed in the study
+. *for the same length of time (some respondents have only one survey year, some have 2, and some have 3)
+. *if this is completely at random, it shouldn't be a problem. But I don't know. I want to conduct
+. *a robustness check. I will do this by also creating an "average ed change per year" variable:
+. 
+. *average ed change per year
+. sort id year
+
+. by id: gen yrcount = _N // how many years was R in the study?
+
+. by id: gen avgedchange = edchange/yrcount
+(46 missing values generated)
+
+. *check:
+. list id year yrcount edchange avgedchange in 1/30
+
+     +-------------------------------------------+
+     | id   year   yrcount   edchange   avgedc~e |
+     |-------------------------------------------|
+  1. |  1     79         2          0          0 |
+  2. |  1     81         2          0          0 |
+  3. |  2     79         3          0          0 |
+  4. |  2     80         3          0          0 |
+  5. |  2     81         3          0          0 |
+     |-------------------------------------------|
+  6. |  3     79         2          0          0 |
+  7. |  3     80         2          0          0 |
+  8. |  4     79         2          0          0 |
+  9. |  4     81         2          0          0 |
+ 10. |  5     79         3          2   .6666667 |
+     |-------------------------------------------|
+ 11. |  5     80         3          2   .6666667 |
+ 12. |  5     81         3          2   .6666667 |
+ 13. |  6     79         3          2   .6666667 |
+ 14. |  6     80         3          2   .6666667 |
+ 15. |  6     81         3          2   .6666667 |
+     |-------------------------------------------|
+ 16. |  7     79         3          2   .6666667 |
+ 17. |  7     80         3          2   .6666667 |
+ 18. |  7     81         3          2   .6666667 |
+ 19. |  8     79         3          0          0 |
+ 20. |  8     80         3          0          0 |
+     |-------------------------------------------|
+ 21. |  8     81         3          0          0 |
+ 22. |  9     79         3          2   .6666667 |
+ 23. |  9     80         3          2   .6666667 |
+ 24. |  9     81         3          2   .6666667 |
+ 25. | 10     79         3          0          0 |
+     |-------------------------------------------|
+ 26. | 10     80         3          0          0 |
+ 27. | 10     81         3          0          0 |
+ 28. | 11     79         2          2          1 |
+ 29. | 11     81         2          2          1 |
+ 30. | 12     79         3          2   .6666667 |
+     +-------------------------------------------+
+
+. 
+. **************
+. * QUESTION 5 *
+. **************
+. 
+. tab rsex, sum(edchange)
+
+            |         Summary of edchange
+SEX OF R 79 |        Mean   Std. Dev.       Freq.
+------------+------------------------------------
+     1:male |   1.1492556   .96349112      16,254
+   2:female |   1.1118799   .96525377      17,054
+------------+------------------------------------
+      Total |   1.1301189   .96456049      33,308
+
+. tab rsex, sum(avgedchange)
+
+            |       Summary of avgedchange
+SEX OF R 79 |        Mean   Std. Dev.       Freq.
+------------+------------------------------------
+     1:male |   .38642797   .32461701      16,254
+   2:female |   .37293305   .32393878      17,054
+------------+------------------------------------
+      Total |   .37951844   .32433521      33,308
+
+. *Men's education appears to have increased more--true for both methods
+. 
+. *ttest for significance
+. ttest edchange, by(rsex) unequal
+
+Two-sample t test with unequal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+  1:male |  16,254    1.149256    .0075573    .9634911    1.134442    1.164069
+2:female |  17,054     1.11188    .0073914    .9652538    1.097392    1.126368
+---------+--------------------------------------------------------------------
+combined |  33,308    1.130119    .0052851    .9645605     1.11976    1.140478
+---------+--------------------------------------------------------------------
+    diff |            .0373757     .010571                .0166561    .0580952
+------------------------------------------------------------------------------
+    diff = mean(1:male) - mean(2:female)                          t =   3.5357
+Ho: diff = 0                     Satterthwaite's degrees of freedom =    33235
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9998         Pr(|T| > |t|) = 0.0004          Pr(T > t) = 0.0002
+
+. ttest avgedchange, by(rsex) unequal
+
+Two-sample t test with unequal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+  1:male |  16,254     .386428    .0025462     .324617    .3814372    .3914188
+2:female |  17,054     .372933    .0024806    .3239388    .3680709    .3777952
+---------+--------------------------------------------------------------------
+combined |  33,308    .3795184    .0017771    .3243352    .3760352    .3830017
+---------+--------------------------------------------------------------------
+    diff |            .0134949    .0035548                .0065275    .0204624
+------------------------------------------------------------------------------
+    diff = mean(1:male) - mean(2:female)                          t =   3.7963
+Ho: diff = 0                     Satterthwaite's degrees of freedom =  33222.5
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9999         Pr(|T| > |t|) = 0.0001          Pr(T > t) = 0.0001
+
+. *both methods suggest a statistically significant difference between males and females
+. 
+. **************
+. * QUESTION 6 *
+. **************
+. tab MARTLD, miss
+
+  Marital status |      Freq.     Percent        Cum.
+-----------------+-----------------------------------
+ -3:invalid skip |          4        0.01        0.01
+ 0:never married |     28,253       84.71       84.72
+       1:married |      4,364       13.08       97.80
+     2:separated |        438        1.31       99.12
+      3:divorced |        272        0.82       99.93
+       6:widowed |         23        0.07      100.00
+-----------------+-----------------------------------
+           Total |     33,354      100.00
+
+. 
+. gen marstatus = 1 if MARTLD == 1
+(28,990 missing values generated)
+
+. replace marstatus = 0 if MARTLD == 0
+(28,253 real changes made)
+
+. 
+. *check
+. tab MARTLD marstatus, miss
+
+                 |            marstatus
+  Marital status |         0          1          . |     Total
+-----------------+---------------------------------+----------
+ -3:invalid skip |         0          0          4 |         4 
+ 0:never married |    28,253          0          0 |    28,253 
+       1:married |         0      4,364          0 |     4,364 
+     2:separated |         0          0        438 |       438 
+      3:divorced |         0          0        272 |       272 
+       6:widowed |         0          0         23 |        23 
+-----------------+---------------------------------+----------
+           Total |    28,253      4,364        737 |    33,354 
+
+. 
+. 
+. **************
+. * QUESTION 7 *
+. **************
+. sort id year
+
+. by id: gen nvm_to_m = marstatus - marstatus[_n-1]
+(12,059 missing values generated)
+
+. 
+. *Check - the variable is working
+. list id year nvm_to_m marstatus MARTLD in 1/50
+
+     +---------------------------------------------------+
+     | id   year   nvm_to_m   marsta~s            MARTLD |
+     |---------------------------------------------------|
+  1. |  1     79          .          0   0:never married |
+  2. |  1     81          0          0   0:never married |
+  3. |  2     79          .          0   0:never married |
+  4. |  2     80          0          0   0:never married |
+  5. |  2     81          0          0   0:never married |
+     |---------------------------------------------------|
+  6. |  3     79          .          0   0:never married |
+  7. |  3     80          0          0   0:never married |
+  8. |  4     79          .          0   0:never married |
+  9. |  4     81          1          1         1:married |
+ 10. |  5     79          .          0   0:never married |
+     |---------------------------------------------------|
+ 11. |  5     80          0          0   0:never married |
+ 12. |  5     81          0          0   0:never married |
+ 13. |  6     79          .          0   0:never married |
+ 14. |  6     80          0          0   0:never married |
+ 15. |  6     81          0          0   0:never married |
+     |---------------------------------------------------|
+ 16. |  7     79          .          0   0:never married |
+ 17. |  7     80          0          0   0:never married |
+ 18. |  7     81          0          0   0:never married |
+ 19. |  8     79          .          1         1:married |
+ 20. |  8     80          0          1         1:married |
+     |---------------------------------------------------|
+ 21. |  8     81          0          1         1:married |
+ 22. |  9     79          .          0   0:never married |
+ 23. |  9     80          0          0   0:never married |
+ 24. |  9     81          0          0   0:never married |
+ 25. | 10     79          .          0   0:never married |
+     |---------------------------------------------------|
+ 26. | 10     80          0          0   0:never married |
+ 27. | 10     81          0          0   0:never married |
+ 28. | 11     79          .          0   0:never married |
+ 29. | 11     81          0          0   0:never married |
+ 30. | 12     79          .          0   0:never married |
+     |---------------------------------------------------|
+ 31. | 12     80          0          0   0:never married |
+ 32. | 12     81          0          0   0:never married |
+ 33. | 13     79          .          0   0:never married |
+ 34. | 13     80          0          0   0:never married |
+ 35. | 13     81          0          0   0:never married |
+     |---------------------------------------------------|
+ 36. | 14     79          .          0   0:never married |
+ 37. | 14     80          0          0   0:never married |
+ 38. | 14     81          0          0   0:never married |
+ 39. | 15     79          .          0   0:never married |
+ 40. | 15     80          0          0   0:never married |
+     |---------------------------------------------------|
+ 41. | 15     81          0          0   0:never married |
+ 42. | 16     79          .          0   0:never married |
+ 43. | 16     80          0          0   0:never married |
+ 44. | 16     81          0          0   0:never married |
+ 45. | 17     79          .          0   0:never married |
+     |---------------------------------------------------|
+ 46. | 17     80          0          0   0:never married |
+ 47. | 17     81          0          0   0:never married |
+ 48. | 18     79          .          0   0:never married |
+ 49. | 18     80          1          1         1:married |
+ 50. | 18     81          0          1         1:married |
+     +---------------------------------------------------+
+
+. 
+. *Average education level of newlywed women in these data -- 11.9 years
+. sum redu if nvm_to_m == 1 & rsex == 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        redu |        698    11.91977     2.00627          5         17
+
+. 
+. 
+. log close 
+      name:  <unnamed>
+       log:  /Users/sarahelizabethfarr/Box/Academic/Teaching/Soc 365 Spring21/Soc365/Class and exercises/Do/Exercise_8.log
+  log type:  text
+ closed on:  25 Feb 2021, 22:23:27
+-------------------------------------------------------------------------------------------------------------------------------------
